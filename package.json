@@ -17,6 +17,7 @@
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
         "react-helmet": "^5.2.1",
+        "react-redux": "^7.0.3",
         "redux": "^4.0.1"
     },
     "devDependencies": {
@@ -29,11 +30,10 @@
     "scripts": {
         "build": "gatsby build",
         "develop": "gatsby develop",
-        "format": "prettier --write src/**/*.{js,jsx}",
+        "format": "prettier --write \"./**/*.{js,jsx,json}\"",
         "start": "npm run develop",
         "serve": "gatsby serve",
-        "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
-        "format": "prettier --write \"./**/*.{js,jsx,json}\""
+        "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
     },
     "repository": {
         "type": "git",
