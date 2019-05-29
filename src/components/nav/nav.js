@@ -23,8 +23,8 @@ class Nav extends React.Component {
         super(props);
 
         this.state = {
-            isCollapse: false
-        }
+            isCollapse: false,
+        };
 
         this.toggleNav = this.toggleNav.bind(this);
     }
@@ -35,15 +35,28 @@ class Nav extends React.Component {
 
     render() {
         return (
-            <div className={styles.navContainer}>
-                <button class={`${styles.menuToggle} hamburger hamburger--spin ${(this.state.isCollapse) ? "is-active" : ""}`} onClick={this.toggleNav} type="button">
+            <div
+                className={`${styles.navContainer} ${
+                    this.state.isCollapse ? styles.isActive : ''
+                }`}
+            >
+                <div
+                    class={`${styles.menuToggle} hamburger hamburger--spin ${
+                        this.state.isCollapse ? 'is-active' : ''
+                    }`}
+                    onClick={this.toggleNav}
+                    type="button"
+                >
                     <span class="hamburger-box">
                         <span class="hamburger-inner" />
                     </span>
-                </button>
+                </div>
             </div>
-        )
+        );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Nav);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Nav);

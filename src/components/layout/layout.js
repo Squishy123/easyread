@@ -38,7 +38,7 @@ const Layout = ({ bgColor, changeBG, children }) => (
             }
         `}
         render={data => (
-            <>  
+            <>
                 <Nav />
                 <div class="main" style={{ backgroundColor: bgColor }}>
                     <button onClick={() => changeBG('red')}>red</button>
