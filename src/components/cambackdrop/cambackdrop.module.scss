@@ -5,12 +5,23 @@
     width: 100vw;
     height: 100vh;
 
-    video {
+    video, canvas{
         width: 100vw;
         height: 100vh;
         object-fit: cover;
     }
+
+    canvas.captured { 
+        position: fixed;
+        left: -10px;
+        bottom: -10px;
+
+        opacity: 0;
+
+        transition: .25s linear;
+    }
 }
+
 
 .prompt {
     position: fixed;
@@ -49,7 +60,7 @@
         border: none;
         color: white;
 
-        font-size: 50px;
+        font-size: 40px;
         transition: 0.25s linear;
     }
 

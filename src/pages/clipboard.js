@@ -10,7 +10,7 @@ import CamBackDrop from '../components/cambackdrop/cambackdrop';
 const ClipboardPage = () => (
     <Layout>
         <SEO title="Clipboard" />
-        <CamBackDrop/>
+        <CamBackDrop />
     </Layout>
 );
 

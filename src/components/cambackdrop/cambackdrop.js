@@ -8,21 +8,25 @@ class CamBackDrop extends React.Component {
 
         this.state = {
             stream: '',
-            facingMode: 'user'
-        }
+            facingMode: 'user',
+            capture: null,
+        };
 
         this.player = React.createRef();
+        this.canvas = React.createRef();
 
         this.getCamera = this.getCamera.bind(this);
         this.reverseCamera = this.reverseCamera.bind(this);
+        this.captureCamera = this.captureCamera.bind(this);
         this.offCamera = this.offCamera.bind(this);
     }
 
     async getCamera() {
         try {
             let stream = await navigator.mediaDevices.getUserMedia({
-                audio: false, video: { facingMode: this.state.facingMode }
-            })
+                audio: false,
+                video: { facingMode: this.state.facingMode },
+            });
 
             this.player.current.srcObject = stream;
 
@@ -35,8 +39,7 @@ class CamBackDrop extends React.Component {
     async reverseCamera() {
         if (this.state.facingMode === 'user')
             this.setState({ facingMode: { exact: 'environment' } });
-        else
-            this.setState({ facingMode: 'user' });
+        else this.setState({ facingMode: 'user' });
 
         try {
             await this.getCamera();
@@ -45,9 +48,25 @@ class CamBackDrop extends React.Component {
         }
     }
 
+    async captureCamera() {
+        let ctx = this.canvas.current.getContext('2d');
+        ctx.drawImage(
+            this.player.current,
+            0,
+            0,
+            this.player.current.width,
+            this.player.current.height
+        );
+
+        let data = this.canvas.current.toDataURL('image/png');
+        this.setState({ capture: data });
+
+        console.log(data);
+    }
+
     async offCamera() {
-        this.state.stream.getTracks()[0].stop();
-        this.setState({stream: ""});
+        if (this.state) this.state.stream.getTracks()[0].stop();
+        this.setState({ stream: '' });
         this.player.current.srcObject = null;
     }
 
@@ -55,22 +74,38 @@ class CamBackDrop extends React.Component {
         return (
             <div className={styles.backdrop}>
                 <video ref={this.player} autoPlay />
-                {(!this.state.stream) ? <div className={styles.prompt} onClick={this.getCamera}>
-                    <h1>Turn on Camera</h1>
-                </div> : null}
+                <canvas ref={this.canvas} />
+
+                {!this.state.stream ? (
+                    <div
+                        className={styles.prompt}
+                        onClick={() => {
+                            this.setState({ facingMode: 'user' });
+                            this.getCamera();
+                        }}
+                    >
+                        <h1>Turn on Camera</h1>
+                    </div>
+                ) : null}
                 <div className={styles.controls}>
-                    <div className={styles.reverseCamera}>
-                        <button onClick={this.offCamera}><i className="fas fa-images" /></button>
+                    <div>
+                        <button onClick={this.offCamera}>
+                            <i className="fas fa-images" />
+                        </button>
                     </div>
-                    <div className={styles.reverseCamera}>
-                        <button onClick={this.reverseCamera}><i className="far fa-circle" /></button>
+                    <div>
+                        <button onClick={this.captureCamera}>
+                            <i className="far fa-circle" />
+                        </button>
                     </div>
-                    <div className={styles.reverseCamera}>
-                        <button onClick={this.reverseCamera}><i className="fas fa-sync-alt" /></button>
+                    <div>
+                        <button onClick={this.reverseCamera}>
+                            <i className="fas fa-sync-alt" />
+                        </button>
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 }
 
