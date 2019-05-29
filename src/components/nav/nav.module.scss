@@ -41,6 +41,11 @@
 
 .profile {
     margin: 10px 5px;
+    text-align: center;
+
+    img {
+        max-width: 150px;
+    }
 
     * {
         padding: 0 7px;
