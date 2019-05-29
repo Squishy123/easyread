@@ -1,0 +1,17 @@
+.navContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 100vh;
+    background-color: blue;
+
+    z-index: 100;
+}
+
+.menuToggle {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    z-index: 200;
+}
