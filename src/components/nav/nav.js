@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Link } from 'gatsby';
+
 import { connect } from 'react-redux';
 
 import { changeBG } from '../../state/actions';
@@ -35,23 +37,62 @@ class Nav extends React.Component {
 
     render() {
         return (
-            <div
-                className={`${styles.navContainer} ${
-                    this.state.isCollapse ? styles.isActive : ''
-                }`}
-            >
+            <>
                 <div
-                    class={`${styles.menuToggle} hamburger hamburger--spin ${
+                    className={`${
+                        styles.menuToggle
+                    } hamburger hamburger--spin ${
                         this.state.isCollapse ? 'is-active' : ''
                     }`}
                     onClick={this.toggleNav}
                     type="button"
                 >
-                    <span class="hamburger-box">
-                        <span class="hamburger-inner" />
+                    <span className="hamburger-box">
+                        <span className="hamburger-inner" />
                     </span>
                 </div>
-            </div>
+                <div
+                    className={`${styles.navContainer} ${
+                        this.state.isCollapse ? styles.isActive : ''
+                    }`}
+                >
+                    <div className={styles.nav}>
+                        <div className={styles.profile}>
+                            <h1>Easyread</h1>
+                            <p>Welcome back!</p>
+                        </div>
+                        <hr />
+                        <ul className={styles.pages}>
+                            {[
+                                {
+                                    name: 'Clipboard',
+                                    url: '/clipboard',
+                                },
+                                ,
+                                {
+                                    name: 'Settings',
+                                    url: '/settings',
+                                },
+                                {
+                                    name: 'Progress Tracker',
+                                    url: '/tracker',
+                                },
+                            ].map(e => (
+                                <li key={e.url}>
+                                    <Link
+                                        className={styles.page}
+                                        activeClassName={styles.pageActive}
+                                        to={e.url}
+                                    >
+                                        <i className="fas fa-heart fa-2x" />
+                                        <p>{e.name}</p>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </>
         );
     }
 }
