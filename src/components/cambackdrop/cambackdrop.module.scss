@@ -6,6 +6,59 @@
     height: 100vh;
 
     video {
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+    }
+}
+
+.prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: black;
+    border-radius: 5px;
+    padding: 5px;
+
+    color: white;
+
+    text-align: center;
+}
+
+.controls {
+    position: fixed;
+    background-color: #0000009c;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100vw;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    div {
+        margin: 10px;
+    }
+
+    button {
+        background: none;
+        border: none;
+        color: white;
+
+        font-size: 50px;
+        transition: 0.25s linear;
+    }
+
+    button:hover {
+        transform: scale(1.5);
+        background: none;
+        border: none;
+        color: white;
+
+        transition: 0.25s linear;
     }
 }

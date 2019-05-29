@@ -7,7 +7,7 @@ import SEO from '../components/seo';
 
 const TrackerPage = () => (
     <Layout>
-        <SEO title="Home" />
+        <SEO title="Tracker" />
         <h1>Hi people</h1>
         <p>Welcome to your new Gatsby site.</p>
         <p>Now go build something great.</p>
