@@ -7,11 +7,28 @@ import SEO from '../components/seo';
 
 import CamBackDrop from '../components/cambackdrop/cambackdrop';
 
-const ClipboardPage = () => (
-    <Layout>
-        <SEO title="Clipboard" />
-        <CamBackDrop />
-    </Layout>
-);
+import { connect } from 'react-redux';
 
-export default ClipboardPage;
+import { changeBG } from '../state/actions';
+
+const mapStateToProps = state => {
+    return { bgColor: state.bgColor };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        changeBG: bgColor => dispatch(changeBG(bgColor)),
+    };
+};
+
+const ClipboardPage = ({ changeBG }) => {
+    changeBG('black');
+    return (
+        <Layout>
+            <SEO title="Clipboard" />
+            <CamBackDrop />
+        </Layout>
+    )
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClipboardPage);

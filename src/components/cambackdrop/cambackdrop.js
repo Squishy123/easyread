@@ -2,6 +2,21 @@ import React from 'react';
 
 import styles from './cambackdrop.module.scss';
 
+import { connect } from 'react-redux';
+
+import { changeBG } from '../../state/actions';
+
+const mapStateToProps = state => {
+    return { bgColor: state.bgColor };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        changeBG: bgColor => dispatch(changeBG(bgColor)),
+    };
+};
+
+
 class CamBackDrop extends React.Component {
     constructor(props) {
         super(props);
@@ -109,4 +124,4 @@ class CamBackDrop extends React.Component {
     }
 }
 
-export default CamBackDrop;
+export default connect(mapStateToProps, mapDispatchToProps)(CamBackDrop);
