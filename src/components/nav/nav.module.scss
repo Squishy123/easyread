@@ -39,6 +39,14 @@
     }
 }
 
+span.dark, span.dark::after, span.dark::before {
+    background-color: white;
+}
+
+.light, .light::after, .light::before {
+    background-color: black;
+}
+
 .profile {
     margin: 10px 5px;
     text-align: center;
@@ -53,7 +61,7 @@
 }
 
 .pages {
-    margin: 30px 5px 0;
+    margin: 30px 5px 30px;
     padding: 0;
     list-style: none;
 

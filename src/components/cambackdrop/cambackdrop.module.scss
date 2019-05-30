@@ -1,0 +1,85 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    video, canvas{
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+    }
+
+    canvas.captured { 
+        position: fixed;
+        left: -10px;
+        bottom: -10px;
+
+        opacity: 0;
+
+        transition: .25s linear;
+    }
+}
+
+
+.prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+
+    color: white;
+
+    text-align: center;
+    
+    transition: .25s linear;
+}
+
+.prompt:hover {
+    background-color: white;
+    color: black;
+
+    transition: .25s linear;
+}
+
+.controls {
+    position: fixed;
+    background-color: #0000009c;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100vw;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    div {
+        margin: 10px;
+    }
+
+    button {
+        background: none;
+        border: none;
+        color: white;
+
+        font-size: 40px;
+        transition: 0.25s linear;
+    }
+
+    button:hover {
+        transform: scale(1.5);
+        background: none;
+        border: none;
+        color: white;
+
+        transition: 0.25s linear;
+    }
+}

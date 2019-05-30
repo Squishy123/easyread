@@ -48,7 +48,13 @@ class Nav extends React.Component {
                     type="button"
                 >
                     <span className="hamburger-box">
-                        <span className="hamburger-inner" />
+                        <span
+                            className={`hamburger-inner ${
+                                this.props.bgColor == 'black'
+                                    ? styles.dark
+                                    : styles.light
+                            }`}
+                        />
                     </span>
                 </div>
                 <div
@@ -58,7 +64,9 @@ class Nav extends React.Component {
                 >
                     <div className={styles.nav}>
                         <div className={styles.profile}>
-                            <img src={require('../../images/reading-profile.png')}/>
+                            <img
+                                src={require('../../images/reading-profile.png')}
+                            />
                             <h1>Easyread</h1>
                             <p>Welcome back!</p>
                         </div>
