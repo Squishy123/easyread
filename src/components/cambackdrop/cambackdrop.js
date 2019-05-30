@@ -16,7 +16,6 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-
 class CamBackDrop extends React.Component {
     constructor(props) {
         super(props);
@@ -34,6 +33,10 @@ class CamBackDrop extends React.Component {
         this.reverseCamera = this.reverseCamera.bind(this);
         this.captureCamera = this.captureCamera.bind(this);
         this.offCamera = this.offCamera.bind(this);
+    }
+
+    componentWillUnmount() {
+        this.offCamera();
     }
 
     async getCamera() {
@@ -80,7 +83,7 @@ class CamBackDrop extends React.Component {
     }
 
     async offCamera() {
-        if (this.state) this.state.stream.getTracks()[0].stop();
+        if (this.state.stream) this.state.stream.getTracks()[0].stop();
         this.setState({ stream: '' });
         this.player.current.srcObject = null;
     }
@@ -124,4 +127,7 @@ class CamBackDrop extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CamBackDrop);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CamBackDrop);

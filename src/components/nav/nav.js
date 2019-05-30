@@ -41,20 +41,26 @@ class Nav extends React.Component {
                 <div
                     className={`${
                         styles.menuToggle
-                        } hamburger hamburger--spin ${
+                    } hamburger hamburger--spin ${
                         this.state.isCollapse ? 'is-active' : ''
-                        }`}
+                    }`}
                     onClick={this.toggleNav}
                     type="button"
                 >
                     <span className="hamburger-box">
-                        <span className={`hamburger-inner ${(this.props.bgColor == 'black') ? styles.dark : styles.light}`}/>
+                        <span
+                            className={`hamburger-inner ${
+                                this.props.bgColor == 'black'
+                                    ? styles.dark
+                                    : styles.light
+                            }`}
+                        />
                     </span>
                 </div>
                 <div
                     className={`${styles.navContainer} ${
                         this.state.isCollapse ? styles.isActive : ''
-                        }`}
+                    }`}
                 >
                     <div className={styles.nav}>
                         <div className={styles.profile}>

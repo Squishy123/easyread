@@ -28,7 +28,10 @@ const ClipboardPage = ({ changeBG }) => {
             <SEO title="Clipboard" />
             <CamBackDrop />
         </Layout>
-    )
+    );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClipboardPage);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ClipboardPage);

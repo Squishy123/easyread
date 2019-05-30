@@ -19,18 +19,21 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const IndexPage = ({changeBG}) => {
+const IndexPage = ({ changeBG }) => {
     changeBG('white');
 
     return (
         <Layout>
-        <SEO title="Home" />
-        <h1>Hi people</h1>
-        <p>Welcome to your new Gatsby site.</p>
-        <p>Now go build something great.</p>
-        <Link to="/page-2/">Go to page 2</Link>
-    </Layout>
-    )
-}
+            <SEO title="Tracker" />
+            <h1>Hi people</h1>
+            <p>Welcome to your new Gatsby site.</p>
+            <p>Now go build something great.</p>
+            <Link to="/page-2/">Go to page 2</Link>
+        </Layout>
+    );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(IndexPage);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(IndexPage);

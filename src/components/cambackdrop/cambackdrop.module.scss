@@ -30,12 +30,22 @@
     transform: translate(-50%, -50%);
 
     background-color: black;
+    border: 1px solid white;
     border-radius: 5px;
     padding: 5px;
 
     color: white;
 
     text-align: center;
+    
+    transition: .25s linear;
+}
+
+.prompt:hover {
+    background-color: white;
+    color: black;
+
+    transition: .25s linear;
 }
 
 .controls {
