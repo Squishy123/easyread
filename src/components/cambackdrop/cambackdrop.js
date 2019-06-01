@@ -24,6 +24,7 @@ class CamBackDrop extends React.Component {
             stream: '',
             facingMode: 'user',
             capture: null,
+            captureURL: ''
         };
 
         this.player = React.createRef();
@@ -56,8 +57,12 @@ class CamBackDrop extends React.Component {
 
     async reverseCamera() {
         if (this.state.facingMode === 'user')
-            this.setState({ facingMode: { exact: 'environment' } });
+            this.setState({ facingMode: 'environment' });
         else this.setState({ facingMode: 'user' });
+
+        console.log(this.state.facingMode);
+
+        await this.offCamera();
 
         try {
             await this.getCamera();
@@ -67,23 +72,39 @@ class CamBackDrop extends React.Component {
     }
 
     async captureCamera() {
+        let { width, height } = this.player.current.getBoundingClientRect();
+        this.canvas.current.setAttribute('width', width);
+        this.canvas.current.setAttribute('height', height);
+
         let ctx = this.canvas.current.getContext('2d');
         ctx.drawImage(
             this.player.current,
             0,
             0,
-            this.player.current.width,
-            this.player.current.height
+            width,
+            height,
         );
 
-        let data = this.canvas.current.toDataURL('image/png');
-        this.setState({ capture: data });
+        ctx.scale(1.35, 1);
 
-        console.log(data);
+        console.log(this.player.current.width);
+        /*
+        let data = await new Promise(function (resolve, reject) {
+            this.canvas.current.toBlob((blob) => resolve(blob));
+        }.bind(this))
+        
+        this.setState({ capture: data, captureURL: URL.createObjectURL(data)});
+
+        console.log(captureURL);
+        */
+        this.setState({ captureURL: this.canvas.current.toDataURL() });
+        console.log(this.state.captureURL);
+
     }
 
     async offCamera() {
-        if (this.state.stream) this.state.stream.getTracks()[0].stop();
+        if (this.state.stream)
+            this.state.stream.getTracks()[0].stop();
         this.setState({ stream: '' });
         this.player.current.srcObject = null;
     }
@@ -91,7 +112,11 @@ class CamBackDrop extends React.Component {
     render() {
         return (
             <div className={styles.backdrop}>
-                <video ref={this.player} autoPlay />
+                <img src={this.state.capture} />
+                {/*rotation only works well for mobile -> todo fix*/}
+                <video ref={this.player} autoPlay style={{
+                    transform: `rotateY(${(this.state.facingMode === 'user') ? '180' : '0'}deg)`
+                }} />
                 <canvas ref={this.canvas} />
 
                 {!this.state.stream ? (
