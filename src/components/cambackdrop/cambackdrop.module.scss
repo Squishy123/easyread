@@ -6,9 +6,12 @@
     height: 100vh;
 
     video, canvas{
-        width: 100vw;
+        /*width: 100vw;
         height: 100vh;
-        object-fit: cover;
+        object-fit: cover;*/
+        position: fixed;
+        top: 50%;
+        left: 50%;
     }
 
     canvas.captured { 

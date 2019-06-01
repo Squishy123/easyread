@@ -34,6 +34,7 @@ class CamBackDrop extends React.Component {
         this.reverseCamera = this.reverseCamera.bind(this);
         this.captureCamera = this.captureCamera.bind(this);
         this.offCamera = this.offCamera.bind(this);
+        this.getCV = this.getCV.bind(this);
     }
 
     componentWillUnmount() {
@@ -81,11 +82,7 @@ class CamBackDrop extends React.Component {
             this.player.current,
             0,
             0,
-            width,
-            height,
         );
-
-        ctx.scale(1.35, 1);
 
         console.log(this.player.current.width);
         /*
@@ -97,8 +94,11 @@ class CamBackDrop extends React.Component {
 
         console.log(captureURL);
         */
-        this.setState({ captureURL: this.canvas.current.toDataURL() });
-        console.log(this.state.captureURL);
+        let data = await this.canvas.current.toDataURL("image/jpeg");
+        this.setState({ captureURL: data });
+        console.log(this.state);
+
+        await this.getCV();
 
     }
 
@@ -109,15 +109,70 @@ class CamBackDrop extends React.Component {
         this.player.current.srcObject = null;
     }
 
+    async getCV() {
+        let key = process.env.GATSBY_AZURE_API_KEY;
+        let base = `https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed`;
+        let params = {
+            //"visualFeatures": "Categories,Description,Color",
+            // "details": "",
+            "mode": "Printed",
+        };
+
+        let strParams = "?";
+        Object.keys(params).forEach((k) => {
+            strParams += `${k}=${params[k]}&`;
+        });
+
+        console.log(strParams);
+
+        //turn image into arr
+        let data = this.state.captureURL.split(',')[1];
+        let mimeType = this.state.captureURL.split(';')[0].slice(5);
+
+        let bytes = window.atob(data);
+        let buf = new ArrayBuffer(bytes.length);
+        let byteArr = new Uint8Array(buf);
+
+        for (let i = 0; i < bytes.length; i++) {
+            byteArr[i] = bytes.charCodeAt(i);
+        }
+
+        let res = await fetch(base /*+ strParams*/, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/octet-stream",
+                "Ocp-Apim-Subscription-Key": key
+            },
+            //data: this.state.captureURL,
+            body: byteArr
+        });
+
+        let loc = res.headers.get('Operation-Location');
+        let result;
+        do {
+            result = await fetch(loc, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Ocp-Apim-Subscription-Key": key
+                },
+            });
+
+            result = await result.json();
+            console.log(result.status);
+        } while (result.status == "Running")
+        console.log(result);
+    }
+
     render() {
         return (
             <div className={styles.backdrop}>
-                <img src={this.state.capture} />
+                <img src={this.state.captureURL} />
                 {/*rotation only works well for mobile -> todo fix*/}
                 <video ref={this.player} autoPlay style={{
-                    transform: `rotateY(${(this.state.facingMode === 'user') ? '180' : '0'}deg)`
+                    transform: `translate(-50%, -50%) rotateY(${(this.state.facingMode === 'user') ? '180' : '0'}deg)`
                 }} />
-                <canvas ref={this.canvas} />
+                <canvas ref={this.canvas} style={{ transform: `translate(-50%, -50%)` }} />
 
                 {!this.state.stream ? (
                     <div
