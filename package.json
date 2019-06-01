@@ -24,6 +24,7 @@
         "tesseract.js": "^1.0.19"
     },
     "devDependencies": {
+        "gh-pages": "^2.0.1",
         "prettier": "^1.17.1"
     },
     "keywords": [
@@ -36,7 +37,8 @@
         "format": "prettier --write \"./**/*.{js,jsx,json}\"",
         "start": "npm run develop",
         "serve": "gatsby serve",
-        "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
+        "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
+        "deploy": "gatsby build --prefix-paths && gh-pages -d public -b gh-pages"
     },
     "repository": {
         "type": "git",

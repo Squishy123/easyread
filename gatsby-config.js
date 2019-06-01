@@ -1,4 +1,5 @@
 module.exports = {
+    pathPrefix: '/easyread',
     siteMetadata: {
         title: `EasyRead`,
         description: `Make reading easier`,
