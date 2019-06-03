@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 
 import { changeBG } from '../../state/actions';
 
+import Textbox from '../textbox/textbox';
+
 const mapStateToProps = state => {
     return { bgColor: state.bgColor };
 };
@@ -24,7 +26,8 @@ class CamBackDrop extends React.Component {
             stream: '',
             facingMode: 'user',
             capture: null,
-            captureURL: ''
+            captureURL: '',
+            textBoxes: []
         };
 
         this.player = React.createRef();
@@ -160,14 +163,43 @@ class CamBackDrop extends React.Component {
 
             result = await result.json();
             console.log(result.status);
-        } while (result.status == "Running")
+        } while (result.status != "Succeeded")
+
         console.log(result);
+
+        //draw boxes 
+        let ctx = this.canvas.current.getContext('2d');
+        if (result && result.recognitionResult)
+            result.recognitionResult.lines.forEach((line) => {
+                let coords = line.boundingBox;
+                /*ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.moveTo(coords[0], coords[1]);
+                ctx.lineTo(coords[2], coords[3]);
+                ctx.lineTo(coords[4], coords[5]);
+                ctx.lineTo(coords[6], coords[7]);
+                ctx.closePath();
+                ctx.fill();
+                */
+
+                ctx.font = `${Math.abs(coords[1] - coords[7])}px Arial`;
+                console.log(Math.abs(coords[1] - coords[7]));
+                let [width, height] = [ctx.measureText(line.text).width + 15, Math.abs(coords[1] - coords[7]) + 15];
+                console.log(height);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(coords[0], coords[1], width, height);
+                ctx.fillStyle = 'black';
+                ctx.fillText(line.text, coords[6], coords[7]);
+
+                //this.setState({ textBoxes: this.state.textBoxes.concat([<Textbox x={coords[6]} y={coords[7]} text={line.text} />]) });
+            })
     }
 
     render() {
         return (
             <div className={styles.backdrop}>
-                <img src={this.state.captureURL} />
+                {this.state.textBoxes}
+                {/*<img src={this.state.captureURL} />*/}
                 {/*rotation only works well for mobile -> todo fix*/}
                 <video ref={this.player} autoPlay style={{
                     transform: `translate(-50%, -50%) rotateY(${(this.state.facingMode === 'user') ? '180' : '0'}deg)`
