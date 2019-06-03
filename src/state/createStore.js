@@ -5,9 +5,9 @@ import * as consts from './constants';
 //initial state
 const initialState = {
     bgColor: 'white',
-    readerBgColor: 'white',
+    readerBgColor: 'yellow',
     readerColor: 'black',
-    readerFont: 'times new romans'
+    readerFont: 'arial'
 };
 
 function alterState(currentState, alteredState) {

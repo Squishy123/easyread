@@ -9,7 +9,7 @@ import { changeReaderBG, changeReaderColor } from '../../state/actions';
 import Textbox from '../textbox/textbox';
 
 const mapStateToProps = state => {
-    return { readerBgColor: state.readerBgColor , readerColor: state.readerColor, readerFont: state.readerFont};
+    return { readerBgColor: state.readerBgColor, readerColor: state.readerColor, readerFont: state.readerFont };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -182,14 +182,15 @@ class CamBackDrop extends React.Component {
                 ctx.fill();
                 */
 
-                ctx.font = `${Math.abs(coords[1] - coords[7])}px ${this.props.readerFont}`;
-                let [width, height] = [ctx.measureText(line.text).width + 15, Math.abs(coords[1] - coords[7]) + 15];
+                //ctx.font = `${Math.abs(coords[1] - coords[7])}px ${this.props.readerFont}`;
+                let offset = this.canvas.current.getBoundingClientRect();
+                /*let [width, height] = [ctx.measureText(line.text).width + 15, Math.abs(coords[1] - coords[7]) + 15];
                 ctx.fillStyle = this.props.readerBgColor;
                 ctx.fillRect(coords[0], coords[1], width, height);
                 ctx.fillStyle = this.props.readerColor;
                 ctx.fillText(line.text, coords[6], coords[7]);
-
-                //this.setState({ textBoxes: this.state.textBoxes.concat([<Textbox x={coords[6]} y={coords[7]} text={line.text} />]) });
+                */
+                this.setState({ textBoxes: this.state.textBoxes.concat([<Textbox key={line.text} x={coords[6] + offset.x} y={coords[7] + offset.y - Math.abs(coords[1] - coords[7])} text={line.text} size={Math.abs(coords[1] - coords[7])} />]) });
             })
     }
 
