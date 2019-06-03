@@ -4,17 +4,17 @@ import styles from './cambackdrop.module.scss';
 
 import { connect } from 'react-redux';
 
-import { changeBG } from '../../state/actions';
+import { changeReaderBG, changeReaderColor } from '../../state/actions';
 
 import Textbox from '../textbox/textbox';
 
 const mapStateToProps = state => {
-    return { bgColor: state.bgColor };
+    return { readerBgColor: state.readerBgColor , readerColor: state.readerColor, readerFont: state.readerFont};
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        changeBG: bgColor => dispatch(changeBG(bgColor)),
+        changeReaderBG: readerBgColor => dispatch(changeReaderBG(readerBgColor)),
     };
 };
 
@@ -182,13 +182,11 @@ class CamBackDrop extends React.Component {
                 ctx.fill();
                 */
 
-                ctx.font = `${Math.abs(coords[1] - coords[7])}px Arial`;
-                console.log(Math.abs(coords[1] - coords[7]));
+                ctx.font = `${Math.abs(coords[1] - coords[7])}px ${this.props.readerFont}`;
                 let [width, height] = [ctx.measureText(line.text).width + 15, Math.abs(coords[1] - coords[7]) + 15];
-                console.log(height);
-                ctx.fillStyle = 'white';
+                ctx.fillStyle = this.props.readerBgColor;
                 ctx.fillRect(coords[0], coords[1], width, height);
-                ctx.fillStyle = 'black';
+                ctx.fillStyle = this.props.readerColor;
                 ctx.fillText(line.text, coords[6], coords[7]);
 
                 //this.setState({ textBoxes: this.state.textBoxes.concat([<Textbox x={coords[6]} y={coords[7]} text={line.text} />]) });
