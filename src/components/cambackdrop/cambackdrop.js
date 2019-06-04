@@ -27,6 +27,7 @@ export default class CamBackDrop extends React.Component {
         this.frameCount = 0;
 
         this.loop = null;
+        this.init = null;
 
         //ref
         this.player = React.createRef();
@@ -69,19 +70,17 @@ export default class CamBackDrop extends React.Component {
 
             //init canvas
             await new Promise((res, rej) => {
-                setTimeout(() => {
+                this.init = setTimeout(() => {
                     this.initCanvas();
                     res();
                 }, 1000);
             });
-
             //init capture
             this.loop = setInterval(async () => {
                 await this.captureFrame();
                 await this.getCV();
                 await this.genText();
             }, 250)
-
         } catch (err) {
             console.log(err);
         }
@@ -101,12 +100,14 @@ export default class CamBackDrop extends React.Component {
     }
 
     async offCamera() {
+        clearTimeout(this.init);
         clearInterval(this.loop);
 
         if (this.state.stream)
             await this.state.mediaStream.getTracks()[0].stop();
+
         this.setState({ mediaStream: null });
-        this.player.current.srcObject = null;
+        //this.player.current.srcObject = null;
     }
 
     //capture frames and run analysis
@@ -204,8 +205,13 @@ export default class CamBackDrop extends React.Component {
 
     //captures and writes to image
     async captureImage() {
-        this.player.current.pause(); 
+        this.player.current.pause();
         await this.offCamera();
+
+        //run 1 more time
+        await this.captureFrame();
+        await this.getCV();
+        await this.genText();
 
         console.log(this.state);
     }
