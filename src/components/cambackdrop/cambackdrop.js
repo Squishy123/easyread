@@ -29,6 +29,7 @@ export default class CamBackDrop extends React.Component {
 
         this.loop = null;
         this.init = null;
+        this.req = false;
 
         //ref
         this.player = React.createRef();
@@ -80,9 +81,13 @@ export default class CamBackDrop extends React.Component {
             });
             //init capture
             this.loop = setInterval(async () => {
-                await this.captureFrame();
-                await this.getCV();
-                await this.genText();
+                if (!this.req) {
+                    this.req = true;
+                    await this.captureFrame();
+                    await this.getCV();
+                    await this.genText();
+                    this.req = false;
+                }
             }, 250)
         } catch (err) {
             console.log(err);
