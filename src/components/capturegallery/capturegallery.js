@@ -9,7 +9,7 @@ export default class CaptureGallery extends React.Component {
         return (
             <div className={styles.gallery}>
                 {
-                    captures.map(capture => 
+                    captures.reverse().map(capture => 
                         <img src={capture.renderImage}/>)
                 }    
             </div>

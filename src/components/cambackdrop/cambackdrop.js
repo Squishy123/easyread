@@ -191,9 +191,6 @@ class CamBackDrop extends React.Component {
         //clear textboxes and text
         this.setState({ textBoxes: [], cachedText: '' });
 
-        ////save before doing work
-        this.ctx.save();
-
         let cachedText = '';
         this.state.recognitionResult.lines.forEach((line) => {
             cachedText += line.text + '\n';
@@ -234,7 +231,7 @@ class CamBackDrop extends React.Component {
         });
 
         //restore
-        this.ctx.restore();
+        this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
     //captures and writes to image
