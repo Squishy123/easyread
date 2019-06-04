@@ -244,7 +244,36 @@ class CamBackDrop extends React.Component {
             await this.genText();
         }
 
+        let captures = JSON.parse(window.localStorage.getItem('captures'));
+
+        if(captures==null) {
+            window.localStorage.setItem('captures', JSON.stringify([{
+               date: Date.now(),
+               recognitionResult: this.state.recognitionResult,
+               cachedText: this.state.cachedText,
+               renderImage: this.state.renderImage,
+               originalDimension: {
+                   width: this.width,
+                   height: this.height
+               } 
+            }]));
+        }  else {
+            window.localStorage.setItem('captures', JSON.stringify(captures.concat([
+                {
+                    date: Date.now(),
+                    recognitionResult: this.state.recognitionResult,
+                    cachedText: this.state.cachedText,
+                    renderImage: this.state.renderImage,
+                    originalDimension: {
+                        width: this.width,
+                        height: this.height
+                    } 
+                 }
+            ])));
+        }
+
         console.log(this.state);
+        console.log(window.localStorage);
     }
 
     componentWillUnmount() {
