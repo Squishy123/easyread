@@ -2,163 +2,127 @@ import React from 'react';
 
 import styles from './cambackdrop.module.scss';
 
-import { connect } from 'react-redux';
-
-import { changeReaderBG, changeReaderColor } from '../../state/actions';
-
 import Textbox from '../textbox/textbox';
 
-const mapStateToProps = state => {
-    return {
-        readerBgColor: state.readerBgColor,
-        readerColor: state.readerColor,
-        readerFont: state.readerFont,
-    };
-};
+const CV_BASE = 'https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
+const CV_KEY = process.env.GATSBY_AZURE_API_KEY;
 
-const mapDispatchToProps = dispatch => {
-    return {
-        changeReaderBG: readerBgColor =>
-            dispatch(changeReaderBG(readerBgColor)),
-    };
-};
-
-class CamBackDrop extends React.Component {
+export default class CamBackDrop extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            stream: '',
+            mediaStream: null,
             facingMode: 'user',
-            capture: null,
             captureURL: '',
             textBoxes: [],
-        };
+            recognitionResult: null,
+            cachedText: ''
+        }
 
+        //temp 
+        this.ctx = null;
+        this.width = 0;
+        this.height = 0;
+        this.frameCount = 0;
+
+        this.loop = null;
+
+        //ref
         this.player = React.createRef();
         this.canvas = React.createRef();
 
-        this.getCamera = this.getCamera.bind(this);
+        //functs
+        this.initCanvas = this.initCanvas.bind(this);
+        this.initCamera = this.initCamera.bind(this);
         this.reverseCamera = this.reverseCamera.bind(this);
-        this.captureCamera = this.captureCamera.bind(this);
         this.offCamera = this.offCamera.bind(this);
+        this.captureFrame = this.captureFrame.bind(this);
         this.getCV = this.getCV.bind(this);
-        this.init = this.init.bind(this);
-
-        this.frameCount = 0;
-        this.textGroup = '';
+        this.genText = this.genText.bind(this);
+        this.captureImage = this.captureImage.bind(this);
     }
 
-    componentDidMount() {
-        this.init();
-    }
-
-    init() {
-        let { width, height } = this.player.current.getBoundingClientRect();
-        this.width = width;
-        this.height = height;
-        this.canvas.current.setAttribute('width', width);
-        this.canvas.current.setAttribute('height', height);
+    //init dimensions and context
+    initCanvas() {
+        let bounds = this.player.current.getBoundingClientRect();
+        this.width = bounds.width;
+        this.height = bounds.height;
+        this.canvas.current.setAttribute('width', this.width);
+        this.canvas.current.setAttribute('height', this.height);
         this.ctx = this.canvas.current.getContext('2d');
-        this.ctx.globalCompositeOperation = 'difference';
     }
 
-    componentWillUnmount() {
-        this.offCamera();
-    }
+    //get media and setup canvas
+    async initCamera() {
+        //reset textboxes and cache
+        this.setState({ textBoxes: [], cachedText: '' });
 
-    async getCamera() {
         try {
             let stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
-                video: { facingMode: this.state.facingMode },
+                video: { facingMode: this.state.facingMode }
             });
 
             this.player.current.srcObject = stream;
+            this.setState({ mediaStream: stream });
 
-            this.setState({ stream: stream });
+            //init canvas
+            await new Promise((res, rej) => {
+                setTimeout(() => {
+                    this.initCanvas();
+                    res();
+                }, 1000);
+            });
 
-            await setTimeout(this.init, 1000);
-            setInterval(this.captureCamera, 250);
+            //init capture
+            this.loop = setInterval(async () => {
+                await this.captureFrame();
+                await this.getCV();
+                await this.genText();
+            }, 250)
+
         } catch (err) {
             console.log(err);
         }
     }
 
     async reverseCamera() {
-        if (this.state.facingMode === 'user')
-            this.setState({ facingMode: 'environment' });
-        else this.setState({ facingMode: 'user' });
-
-        console.log(this.state.facingMode);
+        this.setState({ facingMode: (this.state.facingMode === 'user') ? 'environment' : 'user' });
 
         await this.offCamera();
 
+        //attempt reverse
         try {
-            await this.getCamera();
+            await this.initCamera();
         } catch (err) {
             await this.reverseCamera();
         }
     }
 
-    checkMoved(imageData) {
-        let imageScore = 0;
-        for (let i = 0; i < imageData.data.length; i += 4) {
-            let r = imageData.data[i] / 3;
-            let g = imageData.data[i + 1] / 3;
-            let b = imageData.data[i + 2] / 3;
-            let pixelScore = r + g + b;
-
-            if (pixelScore >= 32) imageScore++;
-        }
-        //console.log(imageScore);
-        if (imageScore >= 30000) return true;
-
-        return false;
-    }
-
-    async captureCamera() {
-        if (this.frameCount % 2 == 0) {
-            this.ctx.globalCompositeOperation = 'difference';
-        } else this.ctx.globalCompositeOperation = 'source-over';
-
-        this.ctx.drawImage(this.player.current, 0, 0);
-
-        let imgData = await this.ctx.getImageData(
-            0,
-            0,
-            this.width,
-            this.height
-        );
-        if (this.checkMoved(imgData) && this.frameCount % 2 != 0) {
-            let data = await this.canvas.current.toDataURL('image/jpeg');
-            this.setState({ captureURL: data });
-            await this.getCV();
-        } 
-        this.frameCount++;
-    }
-
     async offCamera() {
-        if (this.state.stream) this.state.stream.getTracks()[0].stop();
-        this.setState({ stream: '' });
+        clearInterval(this.loop);
+
+        if (this.state.stream)
+            await this.state.mediaStream.getTracks()[0].stop();
+        this.setState({ mediaStream: null });
         this.player.current.srcObject = null;
     }
 
-    async getCV() {
-        let key = process.env.GATSBY_AZURE_API_KEY;
-        let base = `https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed`;
-        let params = {
-            mode: 'Printed',
-        };
+    //capture frames and run analysis
+    async captureFrame() {
+        this.ctx.drawImage(this.player.current, 0, 0);
 
-        let strParams = '?';
-        Object.keys(params).forEach(k => {
-            strParams += `${k}=${params[k]}&`;
-        });
+        let captureURL = await this.canvas.current.toDataURL('image/jpeg');
+        this.setState({ captureURL: captureURL });
 
-        //turn image into arr
-        let data = this.state.captureURL.split(',')[1];
-        let mimeType = this.state.captureURL.split(';')[0].slice(5);
+        this.frameCount++;
+    }
+
+    //chunks data url for payloading
+    chunkDataURL(dataURL) {
+        let data = dataURL.split(',')[1];
+        let mimeType = dataURL.split(';')[0].slice(5);
 
         let bytes = window.atob(data);
         let buf = new ArrayBuffer(bytes.length);
@@ -168,81 +132,82 @@ class CamBackDrop extends React.Component {
             byteArr[i] = bytes.charCodeAt(i);
         }
 
-        let res = await fetch(base /*+ strParams*/, {
+        return byteArr;
+    }
+
+    //chain 2 requests to get analysis
+    async getCV() {
+        let chunkedData = this.chunkDataURL(this.state.captureURL);
+
+        let jobRes = await fetch(CV_BASE, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/octet-stream',
-                'Ocp-Apim-Subscription-Key': key,
+                'Ocp-Apim-Subscription-Key': CV_KEY
             },
-            //data: this.state.captureURL,
-            body: byteArr,
+            body: chunkedData
         });
 
-        let loc = res.headers.get('Operation-Location');
-        let result;
+        let CVRes;
         do {
-            result = await fetch(loc, {
+            CVRes = await fetch(jobRes.headers.get('Operation-Location'), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Ocp-Apim-Subscription-Key': key,
-                },
-            });
+                    'Ocp-Apim-Subscription-Key': CV_KEY
+                }
+            }).then(async res => await res.json());
+        } while (CVRes.status != 'Succeeded');
+        console.log(CVRes)
+        this.setState({
+            recognitionResult: CVRes.recognitionResult
+        });
+    }
 
-            result = await result.json();
-            //console.log(result.status);
-        } while (result.status != 'Succeeded');
+    //generate textboxes and cache text
+    async genText() {
+        //clear textboxes and text
+        this.setState({ textBoxes: [], cachedText: '' });
 
-        //console.log(result);
-
-        //draw boxes
-        let ctx = this.canvas.current.getContext('2d');
         let cachedText = '';
-        if (result && result.recognitionResult) {
-            this.setState({ textBoxes: [] });
+        this.state.recognitionResult.lines.forEach((line) => {
+            cachedText += line.text + '\n';
+            let coords = line.boundingBox;
 
-            for (let i = 0; i < result.recognitionResult.lines.length; i++) {
-                let line = result.recognitionResult.lines[i];
+            let offset = this.canvas.current.getBoundingClientRect();
 
-                //check if exists
-                let trans = this.state.textBoxes.indexOf(function(t) {
-                    return t.str.includes(line.text);
-                });
-                //if (trans != 0) {
+            this.setState({
+                textBoxes: this.state.textBoxes.concat([
+                    {
+                        str: line.text,
+                        el: (
+                            <Textbox
+                                key={line.text}
+                                x={coords[6] + offset.x}
+                                y={
+                                    coords[7] +
+                                    offset.y -
+                                    Math.abs(coords[1] - coords[7])
+                                }
+                                text={line.text}
+                                size={Math.abs(coords[1] - coords[7])}
+                            />
+                        ),
+                    },
+                ]),
+            });
+        })
+        this.setState({
+            cachedText: cachedText
+        });
+    }
 
-                //    continue;
-                //}
+    //captures and writes to image
+    async captureImage() {
+        this.player.current.pause(); 
+        await this.offCamera();
 
-                cachedText += line.text;
-
-                let coords = line.boundingBox;
-
-                let offset = this.canvas.current.getBoundingClientRect();
-                this.setState({
-                    textBoxes: this.state.textBoxes.concat([
-                        {
-                            str: line.text,
-                            el: (
-                                <Textbox
-                                    key={line.text}
-                                    x={coords[6] + offset.x}
-                                    y={
-                                        coords[7] +
-                                        offset.y -
-                                        Math.abs(coords[1] - coords[7])
-                                    }
-                                    text={line.text}
-                                    size={Math.abs(coords[1] - coords[7])}
-                                />
-                            ),
-                        },
-                    ]),
-                });
-            }
-
-            //if(strSimilarity.compareTwoStrings(cachedText, this.textGroup) >
-            this.textGroup = cachedText;
-        }
+        console.log(this.state);
     }
 
     render() {
@@ -259,7 +224,7 @@ class CamBackDrop extends React.Component {
                             this.state.facingMode === 'user' && false
                                 ? '180'
                                 : '0'
-                        }deg)`,
+                            }deg)`,
                     }}
                 />
                 <canvas
@@ -267,15 +232,15 @@ class CamBackDrop extends React.Component {
                     style={{ transform: `translate(-50%, -50%)` }}
                 />
 
-                {!this.state.stream ? (
+                {!this.state.mediaStream ? (
                     <div
                         className={styles.prompt}
                         onClick={() => {
                             this.setState({ facingMode: 'user' });
-                            this.getCamera();
+                            this.initCamera();
                         }}
                     >
-                        <h1>Turn on Camera</h1>
+                        <p>Turn on Camera</p>
                     </div>
                 ) : null}
                 <div className={styles.controls}>
@@ -285,7 +250,7 @@ class CamBackDrop extends React.Component {
                         </button>
                     </div>
                     <div>
-                        <button onClick={this.captureCamera}>
+                        <button onClick={this.captureImage}>
                             <i className="far fa-circle" />
                         </button>
                     </div>
@@ -299,8 +264,3 @@ class CamBackDrop extends React.Component {
         );
     }
 }
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(CamBackDrop);

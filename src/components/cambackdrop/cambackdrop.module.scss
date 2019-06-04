@@ -32,9 +32,9 @@
 
 .prompt {
     position: fixed;
-    top: 50%;
+    top: 10px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
 
     background-color: black;
     border: 1px solid white;
