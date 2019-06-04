@@ -17,7 +17,8 @@ export default class CamBackDrop extends React.Component {
             captureURL: '',
             textBoxes: [],
             recognitionResult: null,
-            cachedText: ''
+            cachedText: '',
+            loading: false
         }
 
         //temp 
@@ -70,8 +71,10 @@ export default class CamBackDrop extends React.Component {
 
             //init canvas
             await new Promise((res, rej) => {
+                this.setState({ loading: true });
                 this.init = setTimeout(() => {
                     this.initCanvas();
+                    this.setState({ loading: false });
                     res();
                 }, 1000);
             });
@@ -103,7 +106,7 @@ export default class CamBackDrop extends React.Component {
         clearTimeout(this.init);
         clearInterval(this.loop);
 
-        if (this.state.stream)
+        if (this.state.mediaStream)
             await this.state.mediaStream.getTracks()[0].stop();
 
         this.setState({ mediaStream: null });
@@ -209,16 +212,25 @@ export default class CamBackDrop extends React.Component {
         await this.offCamera();
 
         //run 1 more time
-        await this.captureFrame();
-        await this.getCV();
-        await this.genText();
+        if (this.ctx) {
+            await this.captureFrame();
+            await this.getCV();
+            await this.genText();
+        }
 
         console.log(this.state);
+    }
+
+    componentWillUnmount() {
+        this.offCamera();
     }
 
     render() {
         return (
             <div className={styles.backdrop}>
+                {(this.state.loading) ? <div className={styles.loader}>
+                    <h1>Loading...</h1>
+                </div> : null}
                 {this.state.textBoxes.map(e => e.el)}
                 {/*<img src={this.state.captureURL} />*/}
                 {/*rotation only works well for mobile -> todo fix*/}
