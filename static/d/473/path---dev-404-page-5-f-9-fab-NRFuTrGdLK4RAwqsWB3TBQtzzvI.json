@@ -1,0 +1,15 @@
+{
+    "data": {
+        "allSitePage": {
+            "nodes": [
+                { "path": "/404/" },
+                { "path": "/clipboard/" },
+                { "path": "/" },
+                { "path": "/settings/" },
+                { "path": "/tracker/" },
+                { "path": "/404.html" }
+            ]
+        }
+    },
+    "pageContext": { "isCreatedByStatefulCreatePages": true }
+}
