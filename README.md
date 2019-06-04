@@ -20,3 +20,17 @@
 `npm install -g http-server`
 #### Hosting with 1-command inside /public:
 `http-server -S -C cert.pem -o`
+
+## Localstorage Usage
+captures: [
+  {
+    date,
+    recognitionResult,
+    cachedText,
+    renderImage 
+    originalDimensions: {
+      width,
+      height
+    }
+  }
+]

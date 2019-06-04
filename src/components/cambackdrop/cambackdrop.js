@@ -4,10 +4,20 @@ import styles from './cambackdrop.module.scss';
 
 import Textbox from '../textbox/textbox';
 
+import { connect } from 'react-redux';
+
 const CV_BASE = 'https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
 const CV_KEY = process.env.GATSBY_AZURE_API_KEY;
 
-export default class CamBackDrop extends React.Component {
+const mapStateToProps = state => {
+    return {
+        readerBgColor: state.readerBgColor,
+        readerColor: state.readerColor,
+        readerFont: state.readerFont,
+    };
+};
+
+class CamBackDrop extends React.Component {
     constructor(props) {
         super(props);
 
@@ -18,6 +28,7 @@ export default class CamBackDrop extends React.Component {
             textBoxes: [],
             recognitionResult: null,
             cachedText: '',
+            renderImage: '',
             loading: false
         }
 
@@ -173,10 +184,13 @@ export default class CamBackDrop extends React.Component {
         });
     }
 
-    //generate textboxes and cache text
+    //generate textboxes, render image and cache text
     async genText() {
         //clear textboxes and text
         this.setState({ textBoxes: [], cachedText: '' });
+
+        ////save before doing work
+        //this.ctx.save();
 
         let cachedText = '';
         this.state.recognitionResult.lines.forEach((line) => {
@@ -185,7 +199,7 @@ export default class CamBackDrop extends React.Component {
 
             let offset = this.canvas.current.getBoundingClientRect();
 
-            this.setState({
+           this.setState({
                 textBoxes: this.state.textBoxes.concat([
                     {
                         str: line.text,
@@ -205,9 +219,16 @@ export default class CamBackDrop extends React.Component {
                     },
                 ]),
             });
+
+            this.ctx.font = `${Math.abs(coords[1] - coords[7])}px ${this.props.readerFont}`
+            this.ctx.fillStyle = this.props.readerBgColor;
+            this.ctx.fillRect(coords[0], coords[1], this.ctx.measureText(line.text).width, Math.abs(coords[1] - coords[7]));
+            this.ctx.fillStyle = this.props.readerColor;
+            this.ctx.fillText(line.text, coords[6], coords[7]);
         })
         this.setState({
-            cachedText: cachedText
+            cachedText: cachedText,
+            renderImage: await this.canvas.current.toDataURL('image/jpeg')
         });
     }
 
@@ -287,3 +308,5 @@ export default class CamBackDrop extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, null)(CamBackDrop);
