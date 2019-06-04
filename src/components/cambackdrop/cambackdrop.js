@@ -6,6 +6,8 @@ import Textbox from '../textbox/textbox';
 
 import { connect } from 'react-redux';
 
+import {Link} from 'gatsby';
+
 const CV_BASE = 'https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
 const CV_KEY = process.env.GATSBY_AZURE_API_KEY;
 
@@ -190,7 +192,7 @@ class CamBackDrop extends React.Component {
         this.setState({ textBoxes: [], cachedText: '' });
 
         ////save before doing work
-        //this.ctx.save();
+        this.ctx.save();
 
         let cachedText = '';
         this.state.recognitionResult.lines.forEach((line) => {
@@ -230,6 +232,9 @@ class CamBackDrop extends React.Component {
             cachedText: cachedText,
             renderImage: await this.canvas.current.toDataURL('image/jpeg')
         });
+
+        //restore
+        this.ctx.restore();
     }
 
     //captures and writes to image
@@ -318,9 +323,11 @@ class CamBackDrop extends React.Component {
                 ) : null}
                 <div className={styles.controls}>
                     <div>
-                        <button onClick={this.offCamera}>
-                            <i className="fas fa-images" />
-                        </button>
+                        <Link to="/gallery">
+                            <button onClick={this.offCamera}>
+                                <i className="fas fa-images" />
+                            </button>
+                        </Link>
                     </div>
                     <div>
                         <button onClick={this.captureImage}>
