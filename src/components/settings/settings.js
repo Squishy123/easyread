@@ -45,7 +45,7 @@ class Settings extends React.Component {
                 <div className={styles.inputGroup}>
                     <div className={styles.inputItem}>
                         <label>Font Family</label>
-                        <select name="font-family" onChange={(e) => { this.props.changeReaderFont(e.target.value) }}>
+                        <select value={this.readerFont} name="font-family" onChange={(e) => { this.props.changeReaderFont(e.target.value) }}>
                             {
                                 ['Arial', 'Open Dyslexic', 'Comic Sans MS', 'Roboto', 'Times New Roman'].map((val, i) =>
                                     <option value={val}>{val}</option>
@@ -53,26 +53,30 @@ class Settings extends React.Component {
                             }
                         </select>
                     </div>
-                    <div className={styles.inputItem}>
-                        <label>Line Spacing</label>
-                        <input type="range" min="1" max="100" className="slider" />
-                    </div>
-                    <div className={styles.inputItem}>
-                        <label>Character Spacing</label>
-                        <input type="range" min="1" max="100" className="slider" />
-                    </div>
+                    {//freezebox these
+                    /*
+                        <div className={styles.inputItem}>
+                            <label>Line Spacing</label>
+                            <input type="range" min="1" max="100" className="slider" />
+                        </div>
+                        <div className={styles.inputItem}>
+                            <label>Character Spacing</label>
+                            <input type="range" min="1" max="100" className="slider" />
+                        </div>
+                    */
+                    }
                     <div className={styles.inputItem}>
                         <label>Font Color</label>
                         <div className={styles.row}>
                             {['yellow', 'white', 'black', 'cyan'].map((val, i) =>
-                                <div key={val} className={styles.tile} style={{ backgroundColor: val }} onClick={() => { this.props.changeReaderColor(val) }} />)}
+                                <div key={'color' + val} className={`${styles.tile} ${(this.props.readerColor == val) ? styles.selected : ''}`} style={{ backgroundColor: val }} onClick={() => { this.props.changeReaderColor(val) }} />)}
                         </div>
                     </div>
                     <div className={styles.inputItem}>
                         <label>Background Color</label>
                         <div className={styles.row}>
                             {['yellow', 'white', 'black', 'cyan'].map((val, i) =>
-                                <div key={val} className={styles.tile} style={{ backgroundColor: val }} onClick={() => { this.props.changeReaderBG(val) }} />)}
+                                <div key={'bgColor' + val} className={`${styles.tile} ${(this.props.readerBgColor == val) ? styles.selected : ''}`} style={{ backgroundColor: val }} onClick={() => { this.props.changeReaderBG(val) }} />)}
                         </div>
                     </div>
                 </div>
