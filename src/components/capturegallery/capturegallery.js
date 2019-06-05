@@ -6,13 +6,15 @@ import { Link, navigate } from 'gatsby';
 
 import Textbox from '../textbox/textbox';
 
+import * as store from 'store';
+
 export default class CaptureGallery extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             textBoxes: [],
-            captures: JSON.parse(window.localStorage.getItem('captures')),
+            captures: store.get('captures'),
         };
 
         if (this.state.captures && this.state.captures.length)
@@ -83,6 +85,13 @@ export default class CaptureGallery extends React.Component {
                             </button>
                         </div>
                         <div>
+                            <button onClick={() => {
+                                        navigate('/gallery');
+                                }}>
+                                <i className="fas fa-images" />
+                            </button>
+                        </div>
+                        <div>
                             <button
                                 onClick={() => {
                                     if (
@@ -106,11 +115,19 @@ export default class CaptureGallery extends React.Component {
         return (
             <div className={styles.gallery}>
                 {this.state.captures ? (
-                    this.state.captures.map((capture, i) => (
+                    <>
+                    {this.state.captures.map((capture, i) => (
                         <Link to={`/gallery/${i}`} key={`capture-${i}`}>
                             <img src={capture.renderImage} />
                         </Link>
-                    ))
+                    ))}
+                    <div className={styles.controls}>
+                        <button onClick={()=> {
+                            store.clearAll();
+                            window.location.reload();
+                        }}><h3>Clear Gallery</h3></button>
+                    </div>
+                    </>
                 ) : (
                     <h3>No Captures here...</h3>
                 )}

@@ -8,8 +8,10 @@ import { connect } from 'react-redux';
 
 import { Link } from 'gatsby';
 
+import * as store from 'store';
+
 const CV_BASE =
-    'https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
+    'https://cors-anywhere.herokuapp.com/https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
 const CV_KEY = process.env.GATSBY_AZURE_API_KEY;
 
 const mapStateToProps = state => {
@@ -262,48 +264,40 @@ class CamBackDrop extends React.Component {
         }
 
         if (this.state.recognitionResult != null) {
-            let captures = JSON.parse(window.localStorage.getItem('captures'));
+            let captures = store.get('captures');
 
             if (captures == null) {
-                window.localStorage.setItem(
-                    'captures',
-                    JSON.stringify([
-                        {
-                            date: Date.now(),
-                            recognitionResult: this.state.recognitionResult,
-                            cachedText: this.state.cachedText,
-                            renderImage: this.state.renderImage,
-                            originalImage: this.state.captureURL,
-                            originalDimension: {
-                                width: this.width,
-                                height: this.height,
-                            },
+                store.set('captures', [
+                    {
+                        date: Date.now(),
+                        recognitionResult: this.state.recognitionResult,
+                        cachedText: this.state.cachedText,
+                        renderImage: this.state.renderImage,
+                        originalImage: this.state.captureURL,
+                        originalDimension: {
+                            width: this.width,
+                            height: this.height,
                         },
-                    ])
-                );
+                    },
+                ])
             } else {
-                window.localStorage.setItem(
-                    'captures',
-                    JSON.stringify(
-                        captures.concat([
-                            {
-                                date: Date.now(),
-                                recognitionResult: this.state.recognitionResult,
-                                cachedText: this.state.cachedText,
-                                renderImage: this.state.renderImage,
-                                originalImage: this.state.captureURL,
-                                originalDimension: {
-                                    width: this.width,
-                                    height: this.height,
-                                },
-                            },
-                        ])
-                    )
-                );
+                store.set('captures', captures.concat([
+                    {
+                        date: Date.now(),
+                        recognitionResult: this.state.recognitionResult,
+                        cachedText: this.state.cachedText,
+                        renderImage: this.state.renderImage,
+                        originalImage: this.state.captureURL,
+                        originalDimension: {
+                            width: this.width,
+                            height: this.height,
+                        },
+                    },
+                ]));
             }
 
             console.log(this.state);
-            console.log(window.localStorage);
+            console.log(store.get('captures'));
         }
     }
 
