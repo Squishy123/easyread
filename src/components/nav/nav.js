@@ -77,7 +77,10 @@ class Nav extends React.Component {
                                     name: 'Clipboard',
                                     url: '/clipboard',
                                 },
-                                ,
+                                {
+                                    name: 'Gallery',
+                                    url: '/gallery',
+                                },
                                 {
                                     name: 'Settings',
                                     url: '/settings',

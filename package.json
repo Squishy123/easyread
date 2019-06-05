@@ -7,6 +7,7 @@
     "dependencies": {
         "gatsby": "^2.7.3",
         "gatsby-image": "^2.1.1",
+        "gatsby-plugin-create-client-paths": "^2.0.5",
         "gatsby-plugin-manifest": "^2.1.1",
         "gatsby-plugin-offline": "^2.1.1",
         "gatsby-plugin-react-helmet": "^3.0.12",
@@ -21,9 +22,11 @@
         "react-helmet": "^5.2.1",
         "react-redux": "^7.0.3",
         "redux": "^4.0.1",
+        "store": "^2.0.12",
         "tesseract.js": "^1.0.19"
     },
     "devDependencies": {
+        "gh-pages": "^2.0.1",
         "prettier": "^1.17.1"
     },
     "keywords": [
@@ -36,7 +39,8 @@
         "format": "prettier --write \"./**/*.{js,jsx,json}\"",
         "start": "npm run develop",
         "serve": "gatsby serve",
-        "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
+        "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
+        "deploy": "gatsby build --prefix-paths && gh-pages -d public -b gh-pages"
     },
     "repository": {
         "type": "git",
