@@ -29,7 +29,7 @@ const Gallery = props => {
         <Layout>
             <SEO title="Home" />
             <h1 style={{ textAlign: 'center', margin: '50px 10px 25px' }}>
-                Captures
+                Gallery
             </h1>
             <CaptureGallery id={!isNaN(id) ? id : null} />
         </Layout>
