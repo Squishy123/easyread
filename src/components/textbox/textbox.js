@@ -20,7 +20,7 @@ class Textbox extends React.Component {
             <div
                 style={{
                     backgroundColor: this.props.readerBgColor,
-                    zIndex: '1000',
+                    zIndex: '1',
                     position: 'fixed',
                     top: this.props.y,
                     left: this.props.x,

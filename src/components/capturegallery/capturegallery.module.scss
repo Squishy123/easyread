@@ -28,10 +28,11 @@
 }
 
 .controls {
+    z-index: 10;
     position: fixed;
     background-color: #0000009c;
     left: 0;
-    bottom: 0;
+    top: calc(100vh - 100px);
     height: 100px;
     width: 100vw;
 
