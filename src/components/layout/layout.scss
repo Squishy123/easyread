@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Open Dyslexic';
+  src: 
+    local('Open Dyslexic'),
+    url(./fonts/open-dyslexic/OpenDyslexic-Regular.otf);
+}
+
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
