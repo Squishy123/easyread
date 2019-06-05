@@ -27,16 +27,6 @@ const mapDispatchToProps = dispatch => {
 class Settings extends React.Component {
     constructor(props) {
         super(props);
-
-        console.log(props);
-
-        this.state = {
-            readerFont: props.readerFont,
-            // lineSpacing: props.lineSpacing,
-            // characterSpacing: props.characterSpacing,
-            readerColor: props.readerColor,
-            readerBgColor: props.readerBgColor
-        }
     }
 
     render() {
@@ -45,25 +35,25 @@ class Settings extends React.Component {
                 <div className={styles.inputGroup}>
                     <div className={styles.inputItem}>
                         <label>Font Family</label>
-                        <select value={this.readerFont} name="font-family" onChange={(e) => { this.props.changeReaderFont(e.target.value) }}>
+                        <select style={{ fontFamily: this.props.readerFont }} value={this.props.readerFont} name="font-family" onChange={(e) => { this.props.changeReaderFont(e.target.value) }}>
                             {
                                 ['Arial', 'Open Dyslexic', 'Comic Sans MS', 'Roboto', 'Times New Roman'].map((val, i) =>
-                                    <option value={val}>{val}</option>
+                                    <option key={val} value={val} style={{ fontFamily: val }}>{val}</option>
                                 )
                             }
                         </select>
                     </div>
                     {//freezebox these
-                    /*
-                        <div className={styles.inputItem}>
-                            <label>Line Spacing</label>
-                            <input type="range" min="1" max="100" className="slider" />
-                        </div>
-                        <div className={styles.inputItem}>
-                            <label>Character Spacing</label>
-                            <input type="range" min="1" max="100" className="slider" />
-                        </div>
-                    */
+                        /*
+                            <div className={styles.inputItem}>
+                                <label>Line Spacing</label>
+                                <input type="range" min="1" max="100" className="slider" />
+                            </div>
+                            <div className={styles.inputItem}>
+                                <label>Character Spacing</label>
+                                <input type="range" min="1" max="100" className="slider" />
+                            </div>
+                        */
                     }
                     <div className={styles.inputItem}>
                         <label>Font Color</label>
@@ -79,14 +69,16 @@ class Settings extends React.Component {
                                 <div key={'bgColor' + val} className={`${styles.tile} ${(this.props.readerBgColor == val) ? styles.selected : ''}`} style={{ backgroundColor: val }} onClick={() => { this.props.changeReaderBG(val) }} />)}
                         </div>
                     </div>
-                </div>
 
-                <h1 style={{
-                    margin: '30px auto',
-                    transition: '.25s linear',
-                    backgroundColor: this.props.readerBgColor,
-                    color: this.props.readerColor, fontFamily: this.props.readerFont
-                }}>This is what Text looks like</h1>
+                    <div className={styles.inputItem}>
+                        <h2 style={{
+                            margin: '30px auto',
+                            transition: '.25s linear',
+                            backgroundColor: this.props.readerBgColor,
+                            color: this.props.readerColor, fontFamily: this.props.readerFont
+                        }}>Hello World!</h2>
+                    </div>
+                </div>
             </div>
         )
     }
