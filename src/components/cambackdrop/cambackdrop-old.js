@@ -36,8 +36,7 @@ class CamBackDrop extends React.Component {
             capture: null,
             captureURL: '',
             textBoxes: [],
-            recognitionResult: null
-
+            recognitionResult: null,
         };
 
         this.ctx = '';
@@ -131,8 +130,7 @@ class CamBackDrop extends React.Component {
             this.ctx.clearRect(0, 0, this.width, this.height);
             this.ctx.drawImage(this.player.current, 0, 0);
             //this.ctx.globalCompositeOperation = 'source-over';
-        }    
-        
+        }
 
         let imgData = await this.ctx.getImageData(
             0,
@@ -256,7 +254,7 @@ class CamBackDrop extends React.Component {
                             this.state.facingMode === 'user' && false
                                 ? '180'
                                 : '0'
-                            }deg)`,
+                        }deg)`,
                     }}
                 />
                 <canvas
@@ -282,7 +280,13 @@ class CamBackDrop extends React.Component {
                         </button>
                     </div>
                     <div>
-                        <button onClick={() => { this.player.current.pause(); clearInterval(this.capture); this.captureFrame(); }}>
+                        <button
+                            onClick={() => {
+                                this.player.current.pause();
+                                clearInterval(this.capture);
+                                this.captureFrame();
+                            }}
+                        >
                             <i className="far fa-circle" />
                         </button>
                     </div>

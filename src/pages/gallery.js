@@ -21,15 +21,17 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-const Gallery = (props) => {
+const Gallery = props => {
     props.changeBG('white');
-    let {pathname} = props.location;
-    let id = pathname.substring(pathname.lastIndexOf('/')+1);
+    let { pathname } = props.location;
+    let id = pathname.substring(pathname.lastIndexOf('/') + 1);
     return (
         <Layout>
             <SEO title="Home" />
-            <h1 style={{textAlign: 'center', margin: '50px 10px 25px'}}>Captures</h1>
-            <CaptureGallery id={(!isNaN(id))? id : null}/>
+            <h1 style={{ textAlign: 'center', margin: '50px 10px 25px' }}>
+                Captures
+            </h1>
+            <CaptureGallery id={!isNaN(id) ? id : null} />
         </Layout>
     );
 };

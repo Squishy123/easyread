@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './capturegallery.module.scss';
 
-import { Link } from 'gatsby';
+import { Link, navigate } from 'gatsby';
 
 import Textbox from '../textbox/textbox';
 
@@ -12,67 +12,109 @@ export default class CaptureGallery extends React.Component {
 
         this.state = {
             textBoxes: [],
-            captures: JSON.parse(window.localStorage.getItem('captures')).reverse()
-        }
+            captures: JSON.parse(window.localStorage.getItem('captures')),
+        };
+
+        if (this.state.captures && this.state.captures.length)
+            this.state.captures = this.state.captures.reverse();
 
         this.original = React.createRef();
         this.imgLoad = this.imgLoad.bind(this);
     }
 
     imgLoad() {
-        this.setState({textBoxes: []});
+        this.setState({ textBoxes: [] });
+        let temp = [];
+        this.state.captures[this.props.id].recognitionResult.lines.forEach(
+            line => {
+                let coords = line.boundingBox;
+                let offset = this.original.current.getBoundingClientRect();
 
-        this.state.captures[this.props.id].recognitionResult.lines.forEach((line) => {
-            let coords = line.boundingBox;
-            let offset = this.original.current.getBoundingClientRect();
-            console.log(line);
-            let temp = this.state.textBoxes;
-            temp.push({
-                str: line.text,
-                el: (
-                    <Textbox
-                        key={line.text + Math.random()}
-                        x={coords[6] + offset.x}
-                        y={
-                            coords[7] +
-                            offset.y -
-                            Math.abs(coords[1] - coords[7])
-                        }
-                        text={line.text}
-                        size={Math.abs(coords[1] - coords[7])}
-                    />
-                ),
-            });
-
-            this.setState({textBoxes: temp});
-        });
+                temp.push({
+                    str: line.text,
+                    el: (
+                        <Textbox
+                            key={line.text + Math.random()}
+                            x={coords[6] + offset.x}
+                            y={
+                                coords[7] +
+                                offset.y -
+                                Math.abs(coords[1] - coords[7])
+                            }
+                            text={line.text}
+                            size={Math.abs(coords[1] - coords[7])}
+                        />
+                    ),
+                });
+            }
+        );
+        this.setState({ textBoxes: temp });
     }
 
     render() {
-        if(this.props.id) {
+        if (this.props.id) {
             return (
-                <div className={styles.single}>
+                <>
                     {this.state.textBoxes.map(e => e.el)}
-                    {
-                    <img ref={this.original} src={this.state.captures[this.props.id].originalImage} 
-                    onLoad={this.imgLoad}/>
-                    }    
-                </div>
-            )
+                    <div className={styles.single}>
+                        {
+                            <img
+                                ref={this.original}
+                                src={
+                                    this.state.captures[this.props.id]
+                                        .originalImage
+                                }
+                                onLoad={this.imgLoad}
+                            />
+                        }
+                    </div>
+                    <div className={styles.controls}>
+                        <div>
+                            <button
+                                onClick={() => {
+                                    if (this.props.id > 0)
+                                        navigate(
+                                            `/gallery/${Number(this.props.id) -
+                                                1}`
+                                        );
+                                }}
+                            >
+                                <i className="fas fa-arrow-left" />
+                            </button>
+                        </div>
+                        <div>
+                            <button
+                                onClick={() => {
+                                    if (
+                                        this.props.id <
+                                        this.state.captures.length - 1
+                                    )
+                                        navigate(
+                                            `/gallery/${Number(this.props.id) +
+                                                1}`
+                                        );
+                                }}
+                            >
+                                <i className="fas fa-arrow-right" />
+                            </button>
+                        </div>
+                    </div>
+                </>
+            );
         }
-           
-        
-            return (
-                <div className={styles.gallery}>
-                    {
-                        this.state.captures.map((capture, i) => 
-                            <Link to={`/gallery/${i}`} key={`capture-${i}`}>
-                                <img src={capture.renderImage}/>
-                            </Link>)
-                    }    
-                </div>
-            )
 
+        return (
+            <div className={styles.gallery}>
+                {this.state.captures ? (
+                    this.state.captures.map((capture, i) => (
+                        <Link to={`/gallery/${i}`} key={`capture-${i}`}>
+                            <img src={capture.renderImage} />
+                        </Link>
+                    ))
+                ) : (
+                    <h3>No Captures here...</h3>
+                )}
+            </div>
+        );
     }
 }
-

@@ -26,3 +26,39 @@
         transform: translate(-50%, -50%);
     }
 }
+
+.controls {
+    position: fixed;
+    background-color: #0000009c;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100vw;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    div {
+        margin: 10px;
+    }
+
+    button {
+        background: none;
+        border: none;
+        color: white;
+
+        font-size: 40px;
+        transition: 0.25s linear;
+    }
+
+    button:hover {
+        transform: scale(1.5);
+        background: none;
+        border: none;
+        color: white;
+
+        transition: 0.25s linear;
+    }
+}

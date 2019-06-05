@@ -6,9 +6,10 @@ import Textbox from '../textbox/textbox';
 
 import { connect } from 'react-redux';
 
-import {Link} from 'gatsby';
+import { Link } from 'gatsby';
 
-const CV_BASE = 'https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
+const CV_BASE =
+    'https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
 const CV_KEY = process.env.GATSBY_AZURE_API_KEY;
 
 const mapStateToProps = state => {
@@ -31,10 +32,10 @@ class CamBackDrop extends React.Component {
             recognitionResult: null,
             cachedText: '',
             renderImage: '',
-            loading: false
-        }
+            loading: false,
+        };
 
-        //temp 
+        //temp
         this.ctx = null;
         this.width = 0;
         this.height = 0;
@@ -77,7 +78,7 @@ class CamBackDrop extends React.Component {
         try {
             let stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
-                video: { facingMode: this.state.facingMode }
+                video: { facingMode: this.state.facingMode },
             });
 
             this.player.current.srcObject = stream;
@@ -101,14 +102,17 @@ class CamBackDrop extends React.Component {
                     await this.genText();
                     this.req = false;
                 }
-            }, 250)
+            }, 250);
         } catch (err) {
             console.log(err);
         }
     }
 
     async reverseCamera() {
-        this.setState({ facingMode: (this.state.facingMode === 'user') ? 'environment' : 'user' });
+        this.setState({
+            facingMode:
+                this.state.facingMode === 'user' ? 'environment' : 'user',
+        });
 
         await this.offCamera();
 
@@ -165,9 +169,9 @@ class CamBackDrop extends React.Component {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/octet-stream',
-                'Ocp-Apim-Subscription-Key': CV_KEY
+                'Ocp-Apim-Subscription-Key': CV_KEY,
             },
-            body: chunkedData
+            body: chunkedData,
         });
 
         let CVRes;
@@ -176,13 +180,13 @@ class CamBackDrop extends React.Component {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Ocp-Apim-Subscription-Key': CV_KEY
-                }
+                    'Ocp-Apim-Subscription-Key': CV_KEY,
+                },
             }).then(async res => await res.json());
         } while (CVRes.status != 'Succeeded');
-        console.log(CVRes)
+        console.log(CVRes);
         this.setState({
-            recognitionResult: CVRes.recognitionResult
+            recognitionResult: CVRes.recognitionResult,
         });
     }
 
@@ -194,13 +198,13 @@ class CamBackDrop extends React.Component {
         this.ctx.save();
 
         let cachedText = '';
-        this.state.recognitionResult.lines.forEach((line) => {
+        this.state.recognitionResult.lines.forEach(line => {
             cachedText += line.text + '\n';
             let coords = line.boundingBox;
 
             let offset = this.canvas.current.getBoundingClientRect();
 
-           this.setState({
+            this.setState({
                 textBoxes: this.state.textBoxes.concat([
                     {
                         str: line.text,
@@ -221,15 +225,22 @@ class CamBackDrop extends React.Component {
                 ]),
             });
 
-            this.ctx.font = `${Math.abs(coords[1] - coords[7])}px ${this.props.readerFont}`
+            this.ctx.font = `${Math.abs(coords[1] - coords[7])}px ${
+                this.props.readerFont
+            }`;
             this.ctx.fillStyle = this.props.readerBgColor;
-            this.ctx.fillRect(coords[0], coords[1], this.ctx.measureText(line.text).width, Math.abs(coords[1] - coords[7]));
+            this.ctx.fillRect(
+                coords[0],
+                coords[1],
+                this.ctx.measureText(line.text).width,
+                Math.abs(coords[1] - coords[7])
+            );
             this.ctx.fillStyle = this.props.readerColor;
             this.ctx.fillText(line.text, coords[6], coords[7]);
-        })
+        });
         this.setState({
             cachedText: cachedText,
-            renderImage: await this.canvas.current.toDataURL('image/jpeg')
+            renderImage: await this.canvas.current.toDataURL('image/jpeg'),
         });
 
         //restore
@@ -239,7 +250,7 @@ class CamBackDrop extends React.Component {
 
     //captures and writes to image
     async captureImage() {
-        console.log("Captured!");
+        console.log('Captured!');
         this.player.current.pause();
         await this.offCamera();
 
@@ -250,38 +261,50 @@ class CamBackDrop extends React.Component {
             await this.genText();
         }
 
-        let captures = JSON.parse(window.localStorage.getItem('captures'));
+        if (this.state.recognitionResult != null) {
+            let captures = JSON.parse(window.localStorage.getItem('captures'));
 
-        if(captures==null) {
-            window.localStorage.setItem('captures', JSON.stringify([{
-               date: Date.now(),
-               recognitionResult: this.state.recognitionResult,
-               cachedText: this.state.cachedText,
-               renderImage: this.state.renderImage,
-               originalImage: this.state.captureURL,
-               originalDimension: {
-                   width: this.width,
-                   height: this.height
-               } 
-            }]));
-        }  else {
-            window.localStorage.setItem('captures', JSON.stringify(captures.concat([
-                {
-                    date: Date.now(),
-                    recognitionResult: this.state.recognitionResult,
-                    cachedText: this.state.cachedText,
-                    renderImage: this.state.renderImage,
-                    originalImage: this.state.captureURL,
-                    originalDimension: {
-                        width: this.width,
-                        height: this.height
-                    } 
-                 }
-            ])));
+            if (captures == null) {
+                window.localStorage.setItem(
+                    'captures',
+                    JSON.stringify([
+                        {
+                            date: Date.now(),
+                            recognitionResult: this.state.recognitionResult,
+                            cachedText: this.state.cachedText,
+                            renderImage: this.state.renderImage,
+                            originalImage: this.state.captureURL,
+                            originalDimension: {
+                                width: this.width,
+                                height: this.height,
+                            },
+                        },
+                    ])
+                );
+            } else {
+                window.localStorage.setItem(
+                    'captures',
+                    JSON.stringify(
+                        captures.concat([
+                            {
+                                date: Date.now(),
+                                recognitionResult: this.state.recognitionResult,
+                                cachedText: this.state.cachedText,
+                                renderImage: this.state.renderImage,
+                                originalImage: this.state.captureURL,
+                                originalDimension: {
+                                    width: this.width,
+                                    height: this.height,
+                                },
+                            },
+                        ])
+                    )
+                );
+            }
+
+            console.log(this.state);
+            console.log(window.localStorage);
         }
-
-        console.log(this.state);
-        console.log(window.localStorage);
     }
 
     componentWillUnmount() {
@@ -291,9 +314,11 @@ class CamBackDrop extends React.Component {
     render() {
         return (
             <div className={styles.backdrop}>
-                {(this.state.loading) ? <div className={styles.loader}>
-                    <h1>Loading...</h1>
-                </div> : null}
+                {this.state.loading ? (
+                    <div className={styles.loader}>
+                        <h1>Loading...</h1>
+                    </div>
+                ) : null}
                 {this.state.textBoxes.map(e => e.el)}
                 {/*<img src={this.state.captureURL} />*/}
                 {/*rotation only works well for mobile -> todo fix*/}
@@ -305,7 +330,7 @@ class CamBackDrop extends React.Component {
                             this.state.facingMode === 'user' && false
                                 ? '180'
                                 : '0'
-                            }deg)`,
+                        }deg)`,
                     }}
                 />
                 <canvas
@@ -348,4 +373,7 @@ class CamBackDrop extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, null)(CamBackDrop);
+export default connect(
+    mapStateToProps,
+    null
+)(CamBackDrop);
