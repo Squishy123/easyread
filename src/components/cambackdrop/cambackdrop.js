@@ -191,6 +191,8 @@ class CamBackDrop extends React.Component {
         //clear textboxes and text
         this.setState({ textBoxes: [], cachedText: '' });
 
+        this.ctx.save();
+
         let cachedText = '';
         this.state.recognitionResult.lines.forEach((line) => {
             cachedText += line.text + '\n';
@@ -204,7 +206,7 @@ class CamBackDrop extends React.Component {
                         str: line.text,
                         el: (
                             <Textbox
-                                key={line.text}
+                                key={line.text + Math.random()}
                                 x={coords[6] + offset.x}
                                 y={
                                     coords[7] +
@@ -231,11 +233,13 @@ class CamBackDrop extends React.Component {
         });
 
         //restore
-        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.ctx.restore();
+        //this.ctx.drawImage(, 0, 0, this.width, this.height);
     }
 
     //captures and writes to image
     async captureImage() {
+        console.log("Captured!");
         this.player.current.pause();
         await this.offCamera();
 
@@ -254,6 +258,7 @@ class CamBackDrop extends React.Component {
                recognitionResult: this.state.recognitionResult,
                cachedText: this.state.cachedText,
                renderImage: this.state.renderImage,
+               originalImage: this.state.captureURL,
                originalDimension: {
                    width: this.width,
                    height: this.height
@@ -266,6 +271,7 @@ class CamBackDrop extends React.Component {
                     recognitionResult: this.state.recognitionResult,
                     cachedText: this.state.cachedText,
                     renderImage: this.state.renderImage,
+                    originalImage: this.state.captureURL,
                     originalDimension: {
                         width: this.width,
                         height: this.height
