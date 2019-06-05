@@ -319,6 +319,8 @@ class CamBackDrop extends React.Component {
                 <video
                     ref={this.player}
                     autoPlay
+                    playsInline 
+                    muted
                     style={{
                         transform: `translate(-50%, -50%) rotateY(${
                             this.state.facingMode === 'user' && false
