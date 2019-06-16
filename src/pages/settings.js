@@ -5,6 +5,8 @@ import Layout from '../components/layout/layout';
 import Image from '../components/image';
 import SEO from '../components/seo';
 
+import Settings from '../components/settings/settings';
+
 import { connect } from 'react-redux';
 
 import { changeBG } from '../state/actions';
@@ -25,10 +27,10 @@ const IndexPage = ({ changeBG }) => {
     return (
         <Layout>
             <SEO title="Settings" />
-            <h1>Hi people</h1>
-            <p>Welcome to your new Gatsby site.</p>
-            <p>Now go build something great.</p>
-            <Link to="/page-2/">Go to page 2</Link>
+            <h1 style={{ textAlign: 'center', margin: '50px 10px 25px' }}>
+                Settings
+            </h1>
+            <Settings/>
         </Layout>
     );
 };

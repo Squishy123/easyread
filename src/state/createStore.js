@@ -2,12 +2,13 @@ import { createStore as reduxCreateStore } from 'redux';
 
 import * as consts from './constants';
 
+import * as store from 'store';
 //initial state
 const initialState = {
-    bgColor: 'white',
-    readerBgColor: 'yellow',
-    readerColor: 'black',
-    readerFont: 'arial',
+    bgColor: store.get('bgColor') || 'white',
+    readerBgColor: store.get('readerBgColor') || 'yellow',
+    readerColor: store.get('readerColor') || 'black',
+    readerFont: store.get('readerFont') || 'arial',
 };
 
 function alterState(currentState, alteredState) {

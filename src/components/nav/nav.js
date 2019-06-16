@@ -90,7 +90,7 @@ class Nav extends React.Component {
                                     url: '/tracker',
                                 },
                             ].map(e => (
-                                <li key={e.url}>
+                                <li key={e.url} onClick={this.toggleNav}>
                                     <Link
                                         className={styles.page}
                                         activeClassName={styles.pageActive}

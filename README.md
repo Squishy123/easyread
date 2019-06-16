@@ -8,6 +8,12 @@
   EasyRead - Docs
 </h1>
 
+## Deployment 
+### Simply run the deploy command and build to gh-pages:
+`yarn deploy`
+### Further configuration in .env.production and path-prefixing in gatsby-config.js
+
+
 ## Local - Testing
 ### In order for mobile devices to make use of userMedia, the web-app has to be hosted on SSL. Use the following to generate a SSL cert and host a local SSL preview:
 
