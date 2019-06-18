@@ -202,43 +202,52 @@ class CamBackDrop extends React.Component {
         let cachedText = '';
         this.state.recognitionResult.lines.forEach(line => {
             cachedText += line.text + '\n';
-            let coords = line.boundingBox;
 
-            let offset = this.canvas.current.getBoundingClientRect();
+            let angle = Math.atan2(line.boundingBox[3] - line.boundingBox[1], line.boundingBox[2] - line.boundingBox[0]);
+            console.log(angle * 180/Math.PI);
 
-            this.setState({
-                textBoxes: this.state.textBoxes.concat([
-                    {
-                        str: line.text,
-                        el: (
-                            <Textbox
-                                key={line.text + Math.random()}
-                                x={coords[6] + offset.x}
-                                y={
-                                    coords[7] +
-                                    offset.y -
-                                    Math.abs(coords[1] - coords[7])
-                                }
-                                text={line.text}
-                                size={Math.abs(coords[1] - coords[7])}
-                            />
-                        ),
-                    },
-                ]),
+            line.words.forEach(word => {
+                let coords = word.boundingBox;
+
+                let offset = this.canvas.current.getBoundingClientRect();
+
+                this.setState({
+                    textBoxes: this.state.textBoxes.concat([
+                        {
+                            str: word.text,
+                            el: (
+                                <Textbox
+                                    key={word.text + Math.random()}
+                                    x={coords[6] + offset.x}
+                                    y={
+                                        coords[7] +
+                                        offset.y -
+                                        Math.abs(coords[1] - coords[7])
+                                    }
+                                    text={word.text}
+                                    size={Math.abs(coords[1] - coords[7])}
+                                    angle={angle}
+                                />
+                            ),
+                        },
+                    ]),
+                });
+
+                this.ctx.font = `${Math.abs(coords[1] - coords[7])}px ${
+                    this.props.readerFont
+                    }`;
+
+
+                this.ctx.fillStyle = this.props.readerBgColor;
+                this.ctx.fillRect(
+                    coords[0],
+                    coords[1],
+                    this.ctx.measureText(word.text).width,
+                    Math.abs(coords[1] - coords[7])
+                );
+                this.ctx.fillStyle = this.props.readerColor;
+                this.ctx.fillText(word.text, coords[6], coords[7]);
             });
-
-            this.ctx.font = `${Math.abs(coords[1] - coords[7])}px ${
-                this.props.readerFont
-            }`;
-            this.ctx.fillStyle = this.props.readerBgColor;
-            this.ctx.fillRect(
-                coords[0],
-                coords[1],
-                this.ctx.measureText(line.text).width,
-                Math.abs(coords[1] - coords[7])
-            );
-            this.ctx.fillStyle = this.props.readerColor;
-            this.ctx.fillText(line.text, coords[6], coords[7]);
         });
         this.setState({
             cachedText: cachedText,
@@ -319,14 +328,14 @@ class CamBackDrop extends React.Component {
                 <video
                     ref={this.player}
                     autoPlay
-                    playsInline 
+                    playsInline
                     muted
                     style={{
                         transform: `translate(-50%, -50%) rotateY(${
                             this.state.facingMode === 'user' && false
                                 ? '180'
                                 : '0'
-                        }deg)`,
+                            }deg)`,
                     }}
                 />
                 <canvas

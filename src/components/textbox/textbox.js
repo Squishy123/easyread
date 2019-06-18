@@ -24,6 +24,7 @@ class Textbox extends React.Component {
                     position: 'fixed',
                     top: this.props.y,
                     left: this.props.x,
+                    transform: `rotate(${(this.props.angle) ? this.props.angle: 0}rad)`
                 }}
             >
                 <h1
