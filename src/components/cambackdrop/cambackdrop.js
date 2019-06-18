@@ -104,7 +104,7 @@ class CamBackDrop extends React.Component {
                     await this.genText();
                     this.req = false;
                 }
-            }, 250);
+            }, 100);
         } catch (err) {
             console.log(err);
         }
