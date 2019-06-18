@@ -19,19 +19,18 @@ class Textbox extends React.Component {
         return (
             <div
                 style={{
-                    backgroundColor: this.props.readerBgColor,
+                    backgroundColor: (this.props.color && this.props.readerBgColor == 'blend') ?  `rgb(${this.props.color[0]}, ${this.props.color[1]}, ${this.props.color[2]})` : this.props.readerBgColor,
                     zIndex: '1',
                     position: 'fixed',
                     top: this.props.y,
                     left: this.props.x,
-                    transform: `rotate(${(this.props.angle) ? this.props.angle: 0}rad)`
                 }}
             >
                 <h1
                     style={{
                         margin: 0,
                         fontSize: this.props.size,
-                        color: this.props.readerColor,
+                        color: (this.props.color && this.props.readerColor == 'blend') ? `rgb(${Math.floor(255 - this.props.color[0])}, ${Math.floor(255-this.props.color[1])}, ${Math.floor(255-this.props.color[2])})` : this.props.readerColor,
                         fontFamily: this.props.readerFont,
                     }}
                 >

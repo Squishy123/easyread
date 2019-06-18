@@ -104,7 +104,7 @@ class CamBackDrop extends React.Component {
                     await this.genText();
                     this.req = false;
                 }
-            }, 250);
+            }, 100);
         } catch (err) {
             console.log(err);
         }
@@ -203,13 +203,13 @@ class CamBackDrop extends React.Component {
         this.state.recognitionResult.lines.forEach(line => {
             cachedText += line.text + '\n';
 
-            let angle = Math.atan2(line.boundingBox[3] - line.boundingBox[1], line.boundingBox[2] - line.boundingBox[0]);
-            console.log(angle * 180/Math.PI);
-
             line.words.forEach(word => {
                 let coords = word.boundingBox;
 
                 let offset = this.canvas.current.getBoundingClientRect();
+
+                //color
+                let rgb = this.ctx.getImageData(coords[0], coords[1], 1, 1).data;
 
                 this.setState({
                     textBoxes: this.state.textBoxes.concat([
@@ -226,7 +226,7 @@ class CamBackDrop extends React.Component {
                                     }
                                     text={word.text}
                                     size={Math.abs(coords[1] - coords[7])}
-                                    angle={angle}
+                                    color={rgb}
                                 />
                             ),
                         },
@@ -237,8 +237,7 @@ class CamBackDrop extends React.Component {
                     this.props.readerFont
                     }`;
 
-
-                this.ctx.fillStyle = this.props.readerBgColor;
+                this.ctx.fillStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`//this.props.readerBgColor;
                 this.ctx.fillRect(
                     coords[0],
                     coords[1],
