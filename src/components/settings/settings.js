@@ -58,14 +58,14 @@ class Settings extends React.Component {
                     <div className={styles.inputItem}>
                         <label>Font Color</label>
                         <div className={styles.row}>
-                            {['yellow', 'white', 'black', 'cyan'].map((val, i) =>
+                            {['yellow', 'white', 'black', 'cyan', 'blend'].map((val, i) =>
                                 <div key={'color' + val} className={`${styles.tile} ${(this.props.readerColor == val) ? styles.selected : ''}`} style={{ backgroundColor: val }} onClick={() => { this.props.changeReaderColor(val) }} />)}
                         </div>
                     </div>
                     <div className={styles.inputItem}>
                         <label>Background Color</label>
                         <div className={styles.row}>
-                            {['yellow', 'white', 'black', 'cyan'].map((val, i) =>
+                            {['yellow', 'white', 'black', 'cyan', 'blend'].map((val, i) =>
                                 <div key={'bgColor' + val} className={`${styles.tile} ${(this.props.readerBgColor == val) ? styles.selected : ''}`} style={{ backgroundColor: val }} onClick={() => { this.props.changeReaderBG(val) }} />)}
                         </div>
                     </div>
