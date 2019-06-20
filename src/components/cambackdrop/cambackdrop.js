@@ -83,8 +83,9 @@ class CamBackDrop extends React.Component {
                 video: { facingMode: this.state.facingMode },
             });
 
-            this.player.current.srcObject = stream;
-            this.setState({ mediaStream: stream });
+
+            //this.player.current.srcObject = stream;
+            //this.setState({ mediaStream: stream });
 
             //init canvas
             await new Promise((res, rej) => {
@@ -326,6 +327,7 @@ class CamBackDrop extends React.Component {
                 {/*rotation only works well for mobile -> todo fix*/}
                 <video
                     ref={this.player}
+                    src={require('../../videos/oliver-twist.mp4')}
                     autoPlay
                     playsInline
                     muted
