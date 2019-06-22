@@ -31,6 +31,7 @@ export default class CaptureGallery extends React.Component {
             line => {
                 let coords = line.boundingBox;
                 let offset = this.original.current.getBoundingClientRect();
+                let angle = Math.atan2(line.boundingBox[3] - line.boundingBox[1], line.boundingBox[2] - line.boundingBox[0]);
 
                 temp.push({
                     str: line.text,
@@ -45,6 +46,7 @@ export default class CaptureGallery extends React.Component {
                             }
                             text={line.text}
                             size={Math.abs(coords[1] - coords[7])}
+                            angle={angle}
                         />
                     ),
                 });

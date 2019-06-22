@@ -204,7 +204,6 @@ class CamBackDrop extends React.Component {
             cachedText += line.text + '\n';
 
             let angle = Math.atan2(line.boundingBox[3] - line.boundingBox[1], line.boundingBox[2] - line.boundingBox[0]);
-            console.log(angle * 180/Math.PI);
 
             line.words.forEach(word => {
                 let coords = word.boundingBox;
@@ -232,6 +231,13 @@ class CamBackDrop extends React.Component {
                         },
                     ]),
                 });
+                //this.ctx.moveTo(coords[0], coords[1]);
+                //this.ctx.lineTo(coords[4], coords[5]);
+                //this.ctx.stroke();
+                //this.ctx.translate((coords[4] + coords[0]) / 2, (coords[5] + coords[1]) / 2);
+                this.ctx.translate(coords[0], coords[1]);
+                //this.ctx.fillRect((coords[4] + coords[0]) / 2, (coords[5] + coords[1]) / 2, 10, 10);
+                this.ctx.rotate(angle);
 
                 this.ctx.font = `${Math.abs(coords[1] - coords[7])}px ${
                     this.props.readerFont
@@ -247,6 +253,7 @@ class CamBackDrop extends React.Component {
                 );
                 this.ctx.fillStyle = this.props.readerColor;
                 this.ctx.fillText(word.text, coords[6], coords[7]);
+
             });
         });
         this.setState({
