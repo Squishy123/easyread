@@ -231,7 +231,7 @@ class CamBackDrop extends React.Component {
                         },
                     ]),
                 });
-
+                /*
                 this.ctx.font = `${Math.abs(coords[1] - coords[7])}px ${
                     this.props.readerFont
                     }`;
@@ -245,7 +245,7 @@ class CamBackDrop extends React.Component {
                     Math.abs(coords[1] - coords[7])
                 );
                 this.ctx.fillStyle = this.props.readerColor;
-                this.ctx.fillText(word.text, coords[6], coords[7]);
+                this.ctx.fillText(word.text, coords[6], coords[7]);*/
             });
         });
         this.setState({
