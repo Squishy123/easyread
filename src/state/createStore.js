@@ -9,6 +9,7 @@ const initialState = {
     readerBgColor: store.get('readerBgColor') || 'yellow',
     readerColor: store.get('readerColor') || 'black',
     readerFont: store.get('readerFont') || 'arial',
+    readerLineHeight: store.get('lineHeight') || 'normal'
 };
 
 function alterState(currentState, alteredState) {
@@ -25,6 +26,8 @@ const reducer = (state, action) => {
             return alterState(state, { readerColor: action.readerColor });
         case consts.CHANGE_READER_FONT:
             return alterState(state, { readerFont: action.readerFont });
+        case consts.CHANGE_LINE_HEIGHT:
+                return alterState(state, { readerLineHeight: action.lineHeight });
         default:
             return state;
     }

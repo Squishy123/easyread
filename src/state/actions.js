@@ -20,3 +20,9 @@ export function changeReaderFont(readerFont) {
     store.set('readerFont', readerFont);
     return { type: consts.CHANGE_READER_FONT, readerFont: readerFont };
 }
+
+export function changeLineHeight(lineHeight) {
+    console.log(lineHeight);
+    store.set('lineHeight', lineHeight);
+    return { type: consts.CHANGE_LINE_HEIGHT, lineHeight: lineHeight}
+}

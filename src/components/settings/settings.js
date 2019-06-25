@@ -4,7 +4,7 @@ import { Link } from 'gatsby';
 
 import { connect } from 'react-redux';
 
-import { changeReaderBG, changeReaderColor, changeReaderFont } from '../../state/actions';
+import { changeReaderBG, changeReaderColor, changeReaderFont, changeLineHeight } from '../../state/actions';
 
 import styles from './settings.module.scss';
 
@@ -12,7 +12,8 @@ const mapStateToProps = state => {
     return {
         readerFont: state.readerFont,
         readerColor: state.readerColor,
-        readerBgColor: state.readerBgColor
+        readerBgColor: state.readerBgColor,
+        readerLineHeight: state.readerLineHeight
     };
 };
 
@@ -21,6 +22,7 @@ const mapDispatchToProps = dispatch => {
         changeReaderBG: readerBgColor => dispatch(changeReaderBG(readerBgColor)),
         changeReaderColor: readerColor => dispatch(changeReaderColor(readerColor)),
         changeReaderFont: readerFont => dispatch(changeReaderFont(readerFont)),
+        changeLineHeight: lineHeight => dispatch(changeLineHeight(lineHeight))
     };
 };
 
@@ -43,18 +45,21 @@ class Settings extends React.Component {
                             }
                         </select>
                     </div>
-                    {//freezebox these
-                        /*
-                            <div className={styles.inputItem}>
-                                <label>Line Spacing</label>
-                                <input type="range" min="1" max="100" className="slider" />
-                            </div>
-                            <div className={styles.inputItem}>
-                                <label>Character Spacing</label>
-                                <input type="range" min="1" max="100" className="slider" />
-                            </div>
-                        */
-                    }
+                    <div className={styles.inputItem}>
+                        <label>Line Height</label>
+                        <div className={styles.row}>
+                            <input type="range" min="1" max="20" className="slider" onChange={
+                                (e) => {
+                                    this.props.changeLineHeight(e.target.value * 1 / 10);
+                                    console.log(this.props.readerLineHeight);
+                                }
+                            } />
+                            <p>{this.props.readerLineHeight}</p></div>
+                    </div>
+                    <div className={styles.inputItem}>
+                        <label>Character Spacing</label>
+                        <input type="range" min="1" max="100" className="slider" />
+                    </div>
                     <div className={styles.inputItem}>
                         <label>Font Color</label>
                         <div className={styles.row}>
@@ -75,8 +80,12 @@ class Settings extends React.Component {
                             margin: '30px auto',
                             transition: '.25s linear',
                             backgroundColor: this.props.readerBgColor,
-                            color: this.props.readerColor, fontFamily: this.props.readerFont
-                        }}>Hello World!</h2>
+                            color: this.props.readerColor, fontFamily: this.props.readerFont,
+                            lineHeight: this.props.readerLineHeight
+                        }}>Line 1: Hello World!
+                        <br />
+                            Line 2: Hello Again!
+                        </h2>
                     </div>
                 </div>
             </div>

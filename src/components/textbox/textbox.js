@@ -7,6 +7,7 @@ const mapStateToProps = state => {
         readerBgColor: state.readerBgColor,
         readerColor: state.readerColor,
         readerFont: state.readerFont,
+        readerLineHeight: state.readerLineHeight
     };
 };
 
@@ -24,7 +25,7 @@ class Textbox extends React.Component {
                     position: 'fixed',
                     top: this.props.y,
                     left: this.props.x,
-                    transform: `rotate(${(this.props.angle) ? this.props.angle: 0}rad)`
+                    transform: `rotate(${(this.props.angle) ? this.props.angle : 0}rad)`
                 }}
             >
                 <h1
@@ -33,6 +34,7 @@ class Textbox extends React.Component {
                         fontSize: this.props.size,
                         color: this.props.readerColor,
                         fontFamily: this.props.readerFont,
+                        lineHeight: this.props.readerLineHeight
                     }}
                 >
                     {this.props.text}
