@@ -9,7 +9,7 @@ const initialState = {
     readerBgColor: store.get('readerBgColor') || 'yellow',
     readerColor: store.get('readerColor') || 'black',
     readerFont: store.get('readerFont') || 'arial',
-    readerLineHeight: store.get('lineHeight') || 'normal'
+    readerLineHeight: store.get('lineHeight') || 1
 };
 
 function alterState(currentState, alteredState) {

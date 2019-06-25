@@ -48,7 +48,7 @@ class Settings extends React.Component {
                     <div className={styles.inputItem}>
                         <label>Line Height</label>
                         <div className={styles.row}>
-                            <input type="range" min="1" max="20" className="slider" onChange={
+                            <input type="range" min="1" max="20" className="slider" value={Number(this.props.readerLineHeight * 10)} onChange={
                                 (e) => {
                                     this.props.changeLineHeight(e.target.value * 1 / 10);
                                     console.log(this.props.readerLineHeight);
