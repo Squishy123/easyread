@@ -1,0 +1,22 @@
+button {
+    background: none;
+    border: none;
+    color: white;
+
+    font-size: 25px;
+    transition: 0.25s linear;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background: none;
+    border: none;
+    color: white;
+
+    transition: 0.25s linear;
+}
+
+.toolTip {
+    padding: 5 10px;
+    background-color:#0000009c;
+}

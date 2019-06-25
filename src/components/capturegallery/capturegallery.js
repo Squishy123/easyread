@@ -6,6 +6,8 @@ import { Link, navigate } from 'gatsby';
 
 import Textbox from '../textbox/textbox';
 
+import ToolTip from '../tooltip/tooltip';
+
 import * as store from 'store';
 
 import { connect } from 'react-redux';
@@ -27,6 +29,7 @@ class CaptureGallery extends React.Component {
         this.state = {
             textBoxes: [],
             cachedText: '',
+            toolTip: null,
             imgLoaded: false,
             textView: false,
             captures: store.get('captures'),
@@ -41,10 +44,12 @@ class CaptureGallery extends React.Component {
     }
 
     selectText(e) {
+        this.setState({toolTip: null})
         let selection = window.getSelection();
-        let rect = selection.getRangeAt(0).getBoundingClientRect();
-        console.log(rect);
-        console.log(selection.toString());
+        if (selection.toString().length > 0) {
+            let rect = selection.getRangeAt(0).getBoundingClientRect();
+            this.setState({ toolTip: <ToolTip top={rect.top - 35} left={rect.left} /> })
+        }
     }
 
     imgLoad() {
@@ -54,9 +59,9 @@ class CaptureGallery extends React.Component {
         this.state.captures[this.props.id].recognitionResult.lines.forEach(
             line => {
                 cachedText.push(
-                    <p 
-                    key={line.text}
-                    onMouseUp={(e)=> {this.selectText(e)}}
+                    <p
+                        key={line.text}
+                        onMouseUp={(e) => { this.selectText(e) }}
                         style={{
                             fontSize: this.props.size,
                             color: this.props.readerColor,
@@ -123,6 +128,7 @@ class CaptureGallery extends React.Component {
                                     backgroundColor: this.props.readerBgColor,
                                 }}
                             >
+                                {this.state.toolTip}
                                 {this.state.cachedText}
                             </div>
                         </div>
