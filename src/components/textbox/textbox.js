@@ -7,7 +7,8 @@ const mapStateToProps = state => {
         readerBgColor: state.readerBgColor,
         readerColor: state.readerColor,
         readerFont: state.readerFont,
-        readerLineHeight: state.readerLineHeight
+        readerLineHeight: state.readerLineHeight,
+        readerLetterSpacing: state.readerLetterSpacing
     };
 };
 
@@ -34,7 +35,8 @@ class Textbox extends React.Component {
                         fontSize: this.props.size,
                         color: this.props.readerColor,
                         fontFamily: this.props.readerFont,
-                        lineHeight: this.props.readerLineHeight
+                        lineHeight: this.props.readerLineHeight,
+                        letterSpacing: `${this.props.readerLetterSpacing}px`
                     }}
                 >
                     {this.props.text}

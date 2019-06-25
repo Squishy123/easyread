@@ -18,8 +18,13 @@
     margin: 5px 0;
 
     label {
+        align-self: center;
         font-size: 32px;
         margin: 15px 0;
+    }
+
+    select {
+        align-self: center;
     }
 }
 

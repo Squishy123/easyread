@@ -22,7 +22,11 @@ export function changeReaderFont(readerFont) {
 }
 
 export function changeLineHeight(lineHeight) {
-    console.log(lineHeight);
     store.set('lineHeight', lineHeight);
     return { type: consts.CHANGE_LINE_HEIGHT, lineHeight: lineHeight}
+}
+
+export function changeLetterSpacing(letterSpacing) {
+    store.set('letterSpacing', letterSpacing);
+    return { type: consts.CHANGE_LETTER_SPACING, letterSpacing: letterSpacing}
 }

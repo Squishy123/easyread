@@ -4,7 +4,7 @@ import { Link } from 'gatsby';
 
 import { connect } from 'react-redux';
 
-import { changeReaderBG, changeReaderColor, changeReaderFont, changeLineHeight } from '../../state/actions';
+import { changeReaderBG, changeReaderColor, changeReaderFont, changeLineHeight, changeLetterSpacing } from '../../state/actions';
 
 import styles from './settings.module.scss';
 
@@ -13,7 +13,8 @@ const mapStateToProps = state => {
         readerFont: state.readerFont,
         readerColor: state.readerColor,
         readerBgColor: state.readerBgColor,
-        readerLineHeight: state.readerLineHeight
+        readerLineHeight: state.readerLineHeight,
+        readerLetterSpacing: state.readerLetterSpacing
     };
 };
 
@@ -22,7 +23,8 @@ const mapDispatchToProps = dispatch => {
         changeReaderBG: readerBgColor => dispatch(changeReaderBG(readerBgColor)),
         changeReaderColor: readerColor => dispatch(changeReaderColor(readerColor)),
         changeReaderFont: readerFont => dispatch(changeReaderFont(readerFont)),
-        changeLineHeight: lineHeight => dispatch(changeLineHeight(lineHeight))
+        changeLineHeight: lineHeight => dispatch(changeLineHeight(lineHeight)),
+        changeLetterSpacing: letterSpacing => dispatch(changeLetterSpacing(letterSpacing))
     };
 };
 
@@ -57,8 +59,15 @@ class Settings extends React.Component {
                             <p>{this.props.readerLineHeight}</p></div>
                     </div>
                     <div className={styles.inputItem}>
-                        <label>Character Spacing</label>
-                        <input type="range" min="1" max="100" className="slider" />
+                        <label>Letter Spacing</label>
+                        <div className={styles.row}>
+                            <input type="range" min="1" max="50" className="slider" value={Number(this.props.readerLetterSpacing * 10)} onChange={
+                                (e) => {
+                                    this.props.changeLetterSpacing(e.target.value * 1 / 10);
+                                    console.log(this.props.readerLetterSpacing);
+                                }
+                            } />
+                            <p>{this.props.readerLetterSpacing}</p></div>
                     </div>
                     <div className={styles.inputItem}>
                         <label>Font Color</label>
@@ -81,7 +90,8 @@ class Settings extends React.Component {
                             transition: '.25s linear',
                             backgroundColor: this.props.readerBgColor,
                             color: this.props.readerColor, fontFamily: this.props.readerFont,
-                            lineHeight: this.props.readerLineHeight
+                            lineHeight: this.props.readerLineHeight,
+                            letterSpacing: `${this.props.readerLetterSpacing}px`
                         }}>Line 1: Hello World!
                         <br />
                             Line 2: Hello Again!

@@ -9,7 +9,8 @@ const initialState = {
     readerBgColor: store.get('readerBgColor') || 'yellow',
     readerColor: store.get('readerColor') || 'black',
     readerFont: store.get('readerFont') || 'arial',
-    readerLineHeight: store.get('lineHeight') || 1
+    readerLineHeight: store.get('lineHeight') || 1,
+    readerLetterSpacing: store.get('letterSpacing') || 1
 };
 
 function alterState(currentState, alteredState) {
@@ -27,7 +28,9 @@ const reducer = (state, action) => {
         case consts.CHANGE_READER_FONT:
             return alterState(state, { readerFont: action.readerFont });
         case consts.CHANGE_LINE_HEIGHT:
-                return alterState(state, { readerLineHeight: action.lineHeight });
+            return alterState(state, { readerLineHeight: action.lineHeight });
+        case consts.CHANGE_LETTER_SPACING:
+            return alterState(state, { readerLetterSpacing: action.letterSpacing });
         default:
             return state;
     }
