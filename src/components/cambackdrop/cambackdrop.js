@@ -208,7 +208,6 @@ class CamBackDrop extends React.Component {
 
             line.words.forEach(word => {
                 let coords = word.boundingBox;
-
                 let offset = this.canvas.current.getBoundingClientRect();
 
                 this.setState({

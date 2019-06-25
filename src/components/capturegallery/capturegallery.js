@@ -14,6 +14,7 @@ export default class CaptureGallery extends React.Component {
 
         this.state = {
             textBoxes: [],
+            cachedText: '',
             captures: store.get('captures'),
         };
 
@@ -27,30 +28,39 @@ export default class CaptureGallery extends React.Component {
     imgLoad() {
         this.setState({ textBoxes: [] });
         let temp = [];
-        this.state.captures[this.props.id].recognitionResult.lines.forEach(
-            line => {
-                let coords = line.boundingBox;
+        let cachedText = '';
+        this.state.captures[this.props.id].recognitionResult.lines.forEach(line => {
+            cachedText += line.text + '\n';
+
+            let angle = Math.atan2(line.boundingBox[3] - line.boundingBox[1], line.boundingBox[2] - line.boundingBox[0]);
+            console.log(angle * 180 / Math.PI);
+
+            line.words.forEach(word => {
+                let coords = word.boundingBox;
                 let offset = this.original.current.getBoundingClientRect();
 
-                temp.push({
-                    str: line.text,
-                    el: (
-                        <Textbox
-                            key={line.text + Math.random()}
-                            x={coords[6] + offset.x}
-                            y={
-                                coords[7] +
-                                offset.y -
-                                Math.abs(coords[1] - coords[7])
-                            }
-                            text={line.text}
-                            size={Math.abs(coords[1] - coords[7])}
-                        />
-                    ),
-                });
-            }
-        );
-        this.setState({ textBoxes: temp });
+                temp.push(
+                    {
+                        str: word.text,
+                        el: (
+                            <Textbox
+                                key={word.text + Math.random()}
+                                x={coords[6] + offset.x}
+                                y={
+                                    coords[7] +
+                                    offset.y -
+                                    Math.abs(coords[1] - coords[7])
+                                }
+                                text={word.text}
+                                size={Math.abs(coords[1] - coords[7])}
+                                angle={angle}
+                            />
+                        ),
+                    },
+                );
+            });
+        });
+        this.setState({ textBoxes: temp, cachedText: cachedText});
     }
 
     render() {
@@ -77,7 +87,7 @@ export default class CaptureGallery extends React.Component {
                                     if (this.props.id > 0)
                                         navigate(
                                             `/gallery/${Number(this.props.id) -
-                                                1}`
+                                            1}`
                                         );
                                 }}
                             >
@@ -86,8 +96,8 @@ export default class CaptureGallery extends React.Component {
                         </div>
                         <div>
                             <button onClick={() => {
-                                        navigate('/gallery');
-                                }}>
+                                navigate('/gallery');
+                            }}>
                                 <i className="fas fa-images" />
                             </button>
                         </div>
@@ -100,7 +110,7 @@ export default class CaptureGallery extends React.Component {
                                     )
                                         navigate(
                                             `/gallery/${Number(this.props.id) +
-                                                1}`
+                                            1}`
                                         );
                                 }}
                             >
@@ -116,21 +126,21 @@ export default class CaptureGallery extends React.Component {
             <div className={styles.gallery}>
                 {this.state.captures ? (
                     <>
-                    {this.state.captures.map((capture, i) => (
-                        <Link to={`/gallery/${i}`} key={`capture-${i}`}>
-                            <img src={capture.renderImage} />
-                        </Link>
-                    ))}
-                    <div className={styles.controls}>
-                        <button onClick={()=> {
-                            store.clearAll();
-                            window.location.reload();
-                        }}><h3>Clear Gallery</h3></button>
-                    </div>
+                        {this.state.captures.map((capture, i) => (
+                            <Link to={`/gallery/${i}`} key={`capture-${i}`}>
+                                <img src={capture.renderImage} />
+                            </Link>
+                        ))}
+                        <div className={styles.controls}>
+                            <button onClick={() => {
+                                store.clearAll();
+                                window.location.reload();
+                            }}><h3>Clear Gallery</h3></button>
+                        </div>
                     </>
                 ) : (
-                    <h3>No Captures here...</h3>
-                )}
+                        <h3>No Captures here...</h3>
+                    )}
             </div>
         );
     }
