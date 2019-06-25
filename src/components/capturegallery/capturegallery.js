@@ -48,7 +48,7 @@ class CaptureGallery extends React.Component {
         let selection = window.getSelection();
         if (selection.toString().length > 0) {
             let rect = selection.getRangeAt(0).getBoundingClientRect();
-            this.setState({ toolTip: <ToolTip top={rect.top - 35} left={rect.left} /> })
+            this.setState({ toolTip: <ToolTip text={selection.toString()} top={rect.top - 35} left={rect.left} /> })
         }
     }
 
