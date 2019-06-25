@@ -203,8 +203,11 @@ class CamBackDrop extends React.Component {
         this.state.recognitionResult.lines.forEach(line => {
             cachedText += line.text + '\n';
 
-            let angle = Math.atan2(line.boundingBox[3] - line.boundingBox[1], line.boundingBox[2] - line.boundingBox[0]);
-            console.log(angle * 180/Math.PI);
+            let angle = Math.atan2(
+                line.boundingBox[3] - line.boundingBox[1],
+                line.boundingBox[2] - line.boundingBox[0]
+            );
+            console.log((angle * 180) / Math.PI);
 
             line.words.forEach(word => {
                 let coords = word.boundingBox;
@@ -287,21 +290,24 @@ class CamBackDrop extends React.Component {
                             height: this.height,
                         },
                     },
-                ])
+                ]);
             } else {
-                store.set('captures', captures.concat([
-                    {
-                        date: Date.now(),
-                        recognitionResult: this.state.recognitionResult,
-                        cachedText: this.state.cachedText,
-                        renderImage: this.state.renderImage,
-                        originalImage: this.state.captureURL,
-                        originalDimension: {
-                            width: this.width,
-                            height: this.height,
+                store.set(
+                    'captures',
+                    captures.concat([
+                        {
+                            date: Date.now(),
+                            recognitionResult: this.state.recognitionResult,
+                            cachedText: this.state.cachedText,
+                            renderImage: this.state.renderImage,
+                            originalImage: this.state.captureURL,
+                            originalDimension: {
+                                width: this.width,
+                                height: this.height,
+                            },
                         },
-                    },
-                ]));
+                    ])
+                );
             }
 
             console.log(this.state);
@@ -334,7 +340,7 @@ class CamBackDrop extends React.Component {
                             this.state.facingMode === 'user' && false
                                 ? '180'
                                 : '0'
-                            }deg)`,
+                        }deg)`,
                     }}
                 />
                 <canvas

@@ -30,7 +30,7 @@ const IndexPage = ({ changeBG }) => {
             <h1 style={{ textAlign: 'center', margin: '50px 10px 25px' }}>
                 Settings
             </h1>
-            <Settings/>
+            <Settings />
         </Layout>
     );
 };

@@ -63,3 +63,29 @@
         transition: 0.25s linear;
     }
 }
+
+.textView {
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    width: 100vw;
+    min-height: calc(100vh - 100px);
+    margin-bottom: 100px;
+    background-color: white;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin
+
+    div {
+        overflow-y: auto;
+    }
+
+    p {
+        align-self: flex-start;
+        margin: 0;
+    }
+}
