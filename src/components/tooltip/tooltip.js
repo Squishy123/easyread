@@ -23,6 +23,7 @@ const mapDispatchToProps = dispatch => {
 
 const TOKEN_BASE =
     'https://cors-anywhere.herokuapp.com/https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken';
+const SPEECH_BASE = `https://eastus.tts.speech.microsoft.com/cognitiveservices/v1`;
 const AZURE_KEY = process.env.GATSBY_AZURE_API_KEY;
 
 const WORDS_HOST = `https://wordsapiv1.p.rapidapi.com/words`;
@@ -88,9 +89,10 @@ class ToolTip extends React.Component {
 
     async getSpeech() {
         console.log(AZURE_KEY);
-        let diff = Math.abs(new Date() - this.props.tokenTimestamp);
+        let diff = Math.abs(new Date() - new Date(this.props.tokenTimestamp));
+        console.log(diff);
         if(!this.props.ttsToken || diff > 540000) {
-
+            console.log('getting new token!');
             let res = await fetch(TOKEN_BASE, {
                 method: 'POST',
                 headers: {
@@ -104,11 +106,67 @@ class ToolTip extends React.Component {
         }
 
         console.log(this.props.ttsToken);
+
+        //call tts
+
+        
+        let tts = await fetch(SPEECH_BASE, {
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/ssml+xml',
+                'Content-length': 0,
+                'Authorization': `Bearer ${this.props.ttsToken}`,
+                'X-Microsoft-OutputFormat': 'riff-8khz-8bit-mono-mulaw',
+            },
+            body: `
+            <speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female'
+            name='en-US-JessaRUS'>
+                ${this.props.text}
+                </voice></speak>`
+        }).then(async(res) => {
+            let reader = res.body.getReader();
+            let val;
+            /*let read;
+            do {
+                read = await reader.read();
+                console.log(read);
+                let arr = new [];
+                arr.set(val);
+                arr.set(read.value);
+                val = arr;
+            } while(read.done == false)
+*/
+            async function stream() {
+                let read = await reader.read();
+                //if(!read.done)
+                //    return;
+
+                let blob = new Blob([read.value], {type: 'audio/mp3'});
+                let url = window.URL.createObjectURL(blob);
+                console.log(url);
+                let sound = new Audio(url);
+                await sound.play();
+                
+                //return await stream();
+            }
+            await stream();
+            /*
+            console.log(val);
+            let blob = new Blob([val], {type: 'audio/mpeg'});
+            console.log(blob);
+            let url = window.URL.createObjectURL(blob);
+            console.log(url);
+            let sound = new Audio(url);
+            await sound.play();*/
+        }).catch(err => console.log(err));
+
+        //console.log(tts);
+        
     }
 
     render() {
         return (
-            <>
+            <>  
                 <div className={styles.toolTip} style={{
                     position: 'fixed',
                     top: this.props.top,
