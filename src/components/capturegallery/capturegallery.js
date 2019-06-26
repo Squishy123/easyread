@@ -44,9 +44,10 @@ class CaptureGallery extends React.Component {
     }
 
     selectText(e) {
-        this.setState({toolTip: null})
+        //this.setState({toolTip: null})
         let selection = window.getSelection();
         if (selection.toString().length > 0) {
+            this.setState({toolTip: null});
             let rect = selection.getRangeAt(0).getBoundingClientRect();
             this.setState({ toolTip: <ToolTip text={selection.toString()} top={rect.top - 35} left={rect.left} /> })
         }
@@ -61,6 +62,8 @@ class CaptureGallery extends React.Component {
                 cachedText.push(
                     <p
                         key={line.text}
+                        onMouseDown={(e) => { this.selectText(e) }}
+                        onTouchStart={(e) => { this.selectText(e) }}
                         onMouseUp={(e) => { this.selectText(e) }}
                         style={{
                             fontSize: this.props.size,

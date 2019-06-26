@@ -40,7 +40,7 @@
         "start": "npm run develop",
         "serve": "gatsby serve",
         "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\"",
-        "deploy": "gatsby build --prefix-paths && gh-pages -d public -b gh-pages"
+        "deploy": "gatsby build && echo easyread.xyz > ./public/CNAME && gh-pages -d public -b gh-pages"
     },
     "repository": {
         "type": "git",
