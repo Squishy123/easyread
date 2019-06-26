@@ -2,14 +2,33 @@ import React from 'react';
 
 import styles from './tooltip.module.scss';
 
-const CV_BASE =
-    'https://cors-anywhere.herokuapp.com/https://eastus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Printed';
-const CV_KEY = process.env.GATSBY_AZURE_API_KEY;
+import { connect } from 'react-redux';
+
+import {
+    saveTextToSpeechToken
+} from '../../state/actions';
+
+const mapStateToProps = state => {
+    return {
+        ttsToken: state.ttsToken,
+        tokenTimestamp: state.tokenTimestamp
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        saveTextToSpeechToken: token => dispatch(saveTextToSpeechToken(token))
+    }
+}
+
+const TOKEN_BASE =
+    'https://cors-anywhere.herokuapp.com/https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken';
+const AZURE_KEY = process.env.GATSBY_AZURE_API_KEY;
 
 const WORDS_HOST = `https://wordsapiv1.p.rapidapi.com/words`;
 const WORDS_KEY = process.env.WORDS_API_KEY;
 
-export default class ToolTip extends React.Component {
+class ToolTip extends React.Component {
     constructor(props) {
         super(props);
 
@@ -68,7 +87,23 @@ export default class ToolTip extends React.Component {
     }
 
     async getSpeech() {
+        console.log(AZURE_KEY);
+        let diff = Math.abs(new Date() - this.props.tokenTimestamp);
+        if(!this.props.ttsToken || diff > 540000) {
 
+            let res = await fetch(TOKEN_BASE, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-length': 0,
+                    'Ocp-Apim-Subscription-Key': AZURE_KEY,
+                }
+            }).then(async res => await res.text());
+    
+            this.props.saveTextToSpeechToken(res);
+        }
+
+        console.log(this.props.ttsToken);
     }
 
     render() {
@@ -81,7 +116,7 @@ export default class ToolTip extends React.Component {
                 }}>
                     {this.state.textAnalysis}
                     <div className={styles.controls}>
-                        <button>
+                        <button onClick={this.getSpeech}> 
                             <i className="fas fa-file-audio" />
                         </button>
                         <button onClick={this.getText}>
@@ -92,3 +127,8 @@ export default class ToolTip extends React.Component {
             </>)
     }
 }
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ToolTip);

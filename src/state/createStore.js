@@ -11,6 +11,8 @@ const initialState = {
     readerFont: store.get('readerFont') || 'arial',
     readerLineHeight: store.get('lineHeight') || 1,
     readerLetterSpacing: store.get('letterSpacing') || 1,
+    ttsToken: store.get('ttsToken'),
+    tokenTimestamp: store.get('tokenTimestamp')
 };
 
 function alterState(currentState, alteredState) {
@@ -32,6 +34,11 @@ const reducer = (state, action) => {
         case consts.CHANGE_LETTER_SPACING:
             return alterState(state, {
                 readerLetterSpacing: action.letterSpacing,
+            });
+        case consts.SAVE_TEXT_TO_SPEECH_TOKEN:
+            return alterState(state, {
+                ttsToken: action.ttsToken,
+                tokenTimestamp: action.tokenTimestamp
             });
         default:
             return state;

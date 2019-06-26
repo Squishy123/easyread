@@ -30,3 +30,11 @@ export function changeLetterSpacing(letterSpacing) {
     store.set('letterSpacing', letterSpacing);
     return { type: consts.CHANGE_LETTER_SPACING, letterSpacing: letterSpacing };
 }
+
+export function saveTextToSpeechToken(token) {
+    store.set('ttsToken', token);
+    let tokenTimestamp = new Date();
+    store.set('tokenTimestamp', tokenTimestamp);
+
+    return {type: consts.SAVE_TEXT_TO_SPEECH_TOKEN, ttsToken: token, tokenTimestamp: tokenTimestamp}
+}
