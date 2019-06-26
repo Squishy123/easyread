@@ -25,10 +25,28 @@ const IndexPage = ({ changeBG }) => {
     return (
         <Layout>
             <SEO title="Home" />
-            <h1>Hi people</h1>
-            <p>Welcome to your new Gatsby site.</p>
-            <p>Now go build something great.</p>
-            <Link to="/page-2/">Go to page 2</Link>
+            <div style={{
+                margin: 'auto',
+                maxWidth: '400px',
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <h1>EasyRead</h1>
+                <img src={require('../images/easyread-logo.png')} style={{maxWidth: '100px'}}/>
+            </div>
+            <p style={{margin: '20px 0 0 0'}}>An aid for people affected by dyslexia and for those who have difficulties in comprehending sentences.</p>
+            <p style={{margin: '20px 0 20px 0'}}>Harness the power of machine learning to read books, papers and more at the ease of your phone's camera.</p>
+            <Link to="/clipboard">Get Started</Link>
+            </div>
         </Layout>
     );
 };

@@ -64,9 +64,11 @@ class Nav extends React.Component {
                 >
                     <div className={styles.nav}>
                         <div className={styles.profile}>
+                            <Link to="/">
                             <img
                                 src={require('../../images/reading-profile.png')}
                             />
+                            </Link>
                             <h1>Easyread</h1>
                             <p>Welcome back!</p>
                         </div>
