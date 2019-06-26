@@ -116,7 +116,7 @@ class ToolTip extends React.Component {
                 'Content-Type': 'application/ssml+xml',
                 'Content-length': 0,
                 'Authorization': `Bearer ${this.props.ttsToken}`,
-                'X-Microsoft-OutputFormat': 'riff-8khz-8bit-mono-mulaw',
+                'X-Microsoft-OutputFormat': 'audio-24khz-160kbitrate-mono-mp3',
             },
             body: `
             <speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female'
@@ -126,30 +126,39 @@ class ToolTip extends React.Component {
         }).then(async(res) => {
             let reader = res.body.getReader();
             let val;
-            /*let read;
+            let streamer = [];
+            let read;
             do {
                 read = await reader.read();
-                console.log(read);
-                let arr = new [];
-                arr.set(val);
-                arr.set(read.value);
-                val = arr;
+                streamer.push(read.value);
+                
             } while(read.done == false)
-*/
-            async function stream() {
-                let read = await reader.read();
-                //if(!read.done)
-                //    return;
 
-                let blob = new Blob([read.value], {type: 'audio/mp3'});
+            console.log(streamer);
+
+            async function stream(val) {
+                let blob = new Blob([val], {type: 'audio/mp3'});
                 let url = window.URL.createObjectURL(blob);
                 console.log(url);
                 let sound = new Audio(url);
                 await sound.play();
                 
-                //return await stream();
+                await new Promise((res, rej) => {
+                    sound.onended = function() {
+                        res();
+                    }
+                });
             }
-            await stream();
+
+            for(let i = 0; i < streamer.length; i++) {
+                if(streamer[i])
+                    try {
+                        await stream(streamer[i]);
+                    } catch(err) {
+                        console.log(err);
+                    }
+            }
+            
             /*
             console.log(val);
             let blob = new Blob([val], {type: 'audio/mpeg'});
