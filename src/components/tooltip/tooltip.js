@@ -197,6 +197,9 @@ class ToolTip extends React.Component {
                         <button onClick={this.getText}>
                             <i className="fas fa-align-left" />
                         </button>
+                        <button onClick={this.props.removeToolTip}>
+                            <i class="fas fa-undo" />
+                        </button>
                     </div>
                 </div>
             </>

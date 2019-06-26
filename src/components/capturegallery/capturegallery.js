@@ -52,6 +52,9 @@ class CaptureGallery extends React.Component {
             this.setState({
                 toolTip: (
                     <ToolTip
+                        removeToolTip={() => {
+                            this.setState({ toolTip: null });
+                        }}
                         text={selection.toString()}
                         top={rect.top - 35}
                         left={rect.left}
@@ -74,9 +77,6 @@ class CaptureGallery extends React.Component {
                             this.selectText(e);
                         }}
                         onTouchStart={e => {
-                            this.selectText(e);
-                        }}
-                        onMouseUp={e => {
                             this.selectText(e);
                         }}
                         style={{
