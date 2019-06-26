@@ -62,6 +62,7 @@ class ToolTip extends React.Component {
             this.setState({
                 textAnalysis: (
                     <div className={styles.textAnalysis}>
+                        <p>{this.props.text}</p>
                         {syllables ? (
                             <>
                                 <p>Syllables: {res.syllables.count}</p>
