@@ -180,7 +180,8 @@ class Settings extends React.Component {
 
                     <div className={styles.inputItem}>
                         <div className={styles.row}>
-                            <button
+                            <button 
+                            style={{color: 'black', border: '1px solid black'}}
                                 onClick={() => {
                                     store.remove('bgColor');
                                     store.remove('readerBgColor');
