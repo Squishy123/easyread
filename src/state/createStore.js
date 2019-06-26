@@ -12,7 +12,7 @@ const initialState = {
     readerLineHeight: store.get('lineHeight') || 1,
     readerLetterSpacing: store.get('letterSpacing') || 1,
     ttsToken: store.get('ttsToken'),
-    tokenTimestamp: store.get('tokenTimestamp')
+    tokenTimestamp: store.get('tokenTimestamp'),
 };
 
 function alterState(currentState, alteredState) {
@@ -38,7 +38,7 @@ const reducer = (state, action) => {
         case consts.SAVE_TEXT_TO_SPEECH_TOKEN:
             return alterState(state, {
                 ttsToken: action.ttsToken,
-                tokenTimestamp: action.tokenTimestamp
+                tokenTimestamp: action.tokenTimestamp,
             });
         default:
             return state;

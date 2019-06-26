@@ -36,5 +36,9 @@ export function saveTextToSpeechToken(token) {
     let tokenTimestamp = new Date();
     store.set('tokenTimestamp', tokenTimestamp);
 
-    return {type: consts.SAVE_TEXT_TO_SPEECH_TOKEN, ttsToken: token, tokenTimestamp: tokenTimestamp}
+    return {
+        type: consts.SAVE_TEXT_TO_SPEECH_TOKEN,
+        ttsToken: token,
+        tokenTimestamp: tokenTimestamp,
+    };
 }

@@ -47,9 +47,17 @@ class CaptureGallery extends React.Component {
         //this.setState({toolTip: null})
         let selection = window.getSelection();
         if (selection.toString().length > 0) {
-            this.setState({toolTip: null});
+            this.setState({ toolTip: null });
             let rect = selection.getRangeAt(0).getBoundingClientRect();
-            this.setState({ toolTip: <ToolTip text={selection.toString()} top={rect.top - 35} left={rect.left} /> })
+            this.setState({
+                toolTip: (
+                    <ToolTip
+                        text={selection.toString()}
+                        top={rect.top - 35}
+                        left={rect.left}
+                    />
+                ),
+            });
         }
     }
 
@@ -62,9 +70,15 @@ class CaptureGallery extends React.Component {
                 cachedText.push(
                     <p
                         key={line.text}
-                        onMouseDown={(e) => { this.selectText(e) }}
-                        onTouchStart={(e) => { this.selectText(e) }}
-                        onMouseUp={(e) => { this.selectText(e) }}
+                        onMouseDown={e => {
+                            this.selectText(e);
+                        }}
+                        onTouchStart={e => {
+                            this.selectText(e);
+                        }}
+                        onMouseUp={e => {
+                            this.selectText(e);
+                        }}
                         style={{
                             fontSize: this.props.size,
                             color: this.props.readerColor,
@@ -72,7 +86,7 @@ class CaptureGallery extends React.Component {
                             lineHeight: this.props.readerLineHeight,
                             letterSpacing: `${
                                 this.props.readerLetterSpacing
-                                }px`,
+                            }px`,
                         }}
                     >
                         {line.text}
@@ -124,7 +138,13 @@ class CaptureGallery extends React.Component {
                     {this.state.textView ? (
                         <div className={styles.textView}>
                             <h1
-                                style={{ textAlign: 'center', margin: '50px 10px 25px' }}>TextView</h1>
+                                style={{
+                                    textAlign: 'center',
+                                    margin: '50px 10px 25px',
+                                }}
+                            >
+                                TextView
+                            </h1>
                             <div
                                 style={{
                                     padding: '20px',
@@ -158,7 +178,7 @@ class CaptureGallery extends React.Component {
                                     if (this.props.id > 0)
                                         navigate(
                                             `/gallery/${Number(this.props.id) -
-                                            1}`
+                                                1}`
                                         );
                                 }}
                             >
@@ -197,7 +217,7 @@ class CaptureGallery extends React.Component {
                                     )
                                         navigate(
                                             `/gallery/${Number(this.props.id) +
-                                            1}`
+                                                1}`
                                         );
                                 }}
                             >
@@ -230,8 +250,8 @@ class CaptureGallery extends React.Component {
                         </div>
                     </>
                 ) : (
-                        <h3>No Captures here...</h3>
-                    )}
+                    <h3>No Captures here...</h3>
+                )}
             </div>
         );
     }
