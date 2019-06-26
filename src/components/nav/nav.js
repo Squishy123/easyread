@@ -87,10 +87,11 @@ class Nav extends React.Component {
                                     name: 'Settings',
                                     url: '/settings',
                                 },
+                                /*
                                 {
                                     name: 'Progress Tracker',
                                     url: '/tracker',
-                                },
+                                },*/
                             ].map(e => (
                                 <li key={e.url} onClick={this.toggleNav}>
                                     <Link
